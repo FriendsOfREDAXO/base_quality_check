@@ -14,8 +14,6 @@ $all_tasks = BaseQualityCheckDataset::query()
     ->orderBy('prio', 'ASC');
 
 
-
-
 if ($all_tasks) {
     foreach ($all_tasks as $task) {
         if ($currentSubGroup != $task->getSubgroup()->subgroup) {

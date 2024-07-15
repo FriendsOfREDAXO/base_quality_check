@@ -8,6 +8,11 @@ Je nach Wissenstand des Entwicklers, Budget des Projektes oder dessen Anforderun
 
 Einfach möglichst alle Statusicons anklicken und alles grün werden lassen :-))
 
+**Mitmachen**
+
+Solltest Dir irgendein Test fehlen oder irgendetwas nicht richtig oder überflüssig findest schreibe bitte [HIER](https://github.com/FriendsOfREDAXO/base_quality_check/issues) ein Issue.
+
+
 
 ## ToDo / Ideen
 

@@ -2,6 +2,12 @@
 Base Quality Check - Changelog
 ================================================================================
 
+
+## Version 1.3.1 - 15.07.2024
+
+- Fehlerbehbung
+- Änderung der README
+
 ## Version 1.3.0 - 15.07.2024
 
 - Nutzung von Namespaces.  Danke an [skerbis](https://github.com/skerbis)
