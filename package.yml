@@ -1,0 +1,37 @@
+package: base_quality_check
+version: 1.3.0
+author: 'Friends Of REDAXO'
+supportpage: https://github.com/FriendsOfREDAXO/base_quality_check
+compile: false
+page:
+  title: Base Quality Check
+  icon: rex-icon fa-check check
+  perm: admin
+  live_mode: false
+  block: base_addon  
+  subpages:
+    frontend:   
+      title: Frontend <div id="frontendcount"></div>
+    backend:   
+      title: Backend <div id="backendcount"></div>   
+    live:   
+      title: Live <div id="livecount"></div>            
+    readme:
+        title: Info
+        subPath: README.md
+        itemclass: pull-right
+    changelog:
+        title: Changelog
+        subPath: CHANGELOG.md
+        itemclass: pull-right        
+
+requires:
+  redaxo: '^5.15'
+  yform: '^4.2.1'
+
+installer_ignore:
+    - .git
+    - preview
+    - .github
+    - .gitignore
+    - .gitattributes
