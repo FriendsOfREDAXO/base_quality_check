@@ -165,5 +165,7 @@ function getColorByPercentage($percentage)
 }
 
 rex_extension::register('PACKAGES_INCLUDED', function () {
-	echo updateTaskscounter();
+	if (rex_addon::get('base_quality_check')->isInstalled()) {
+		echo updateTaskscounter();
+	}
 });

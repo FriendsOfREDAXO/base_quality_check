@@ -16,6 +16,8 @@ Solltest Dir irgendein Test fehlen oder irgendetwas nicht richtig oder überflü
 
 ## ToDo / Ideen
 
+-- ** Neue Aufteilung der Tasks in Technik und Inhalt?**
+
 -- **Frontend**
 
 - Fav- und Touch Icons

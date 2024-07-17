@@ -2,6 +2,10 @@
 Base Quality Check - Changelog
 ================================================================================
 
+## Version 1.3.2 - 17.07.2024
+
+- Fehlerbehbung
+- LICENSE geändert 
 
 ## Version 1.3.1 - 15.07.2024
 
