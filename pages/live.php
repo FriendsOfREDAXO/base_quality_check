@@ -1,7 +1,7 @@
 <?php
 
 $group = 3;
-$$page = rex_be_controller::getCurrentPageObject();
+$page = rex_be_controller::getCurrentPageObject();
 $pagetitle = $page->getTitle();
 
 $page_fragment = new rex_fragment();
