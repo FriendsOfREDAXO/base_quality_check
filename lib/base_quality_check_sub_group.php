@@ -1,29 +1,12 @@
-<?php 
+<?php
 
-use rex_yform_manager_dataset;
+/**
+ * @deprecated 2.0.0 Aufruf auf "FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckSubGroup" (Namespace) umstellen
+ *
+ * Allgemeine Anleitung zur Umstellung:
+ * @see https://github.com/orgs/FriendsOfREDAXO/discussions/40
+ */
 
-class base_quality_check_sub_group extends rex_yform_manager_dataset {
-	
-    /* Untergruppe */
-    /** @api */
-    public function getSubgroup() : ?string {
-        return $this->getValue("subgroup");
-    }
-    /** @api */
-    public function setSubgroup(mixed $value) : self {
-        $this->setValue("subgroup", $value);
-        return $this;
-    }
+use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckSubGroup;
 
-    /* Status */
-    /** @api */
-    public function getStatus() : ?string {
-        return $this->getValue("status");
-    }
-    /** @api */
-    public function setStatus(mixed $value) : self {
-        $this->setValue("status", $value);
-        return $this;
-    }
-
-}?>
+class base_quality_check_sub_group extends BaseQualityCheckSubGroup {}
