@@ -2,6 +2,12 @@
 Base Quality Check - Changelog
 ================================================================================
 
+
+## Version 1.6.0. 22.07.2024
+
+add installer action, publish to redaxo.org. Danke an [skerbis](https://github.com/skerbis)
+
+
 ## Version 1.5.0  - 22.07.2024
 
 - Füllstandsanzeige nur mit PHP, kein JS. Danke an [christophboecker](https://github.com/christophboecker)
