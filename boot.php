@@ -4,7 +4,6 @@ use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckGroup;
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckSubGroup;
 
-/** @var rex_addon $this */
 $addon = rex_addon::get('base_quality_check');
 
 if (rex_addon::get('yform')->isAvailable() && !rex::isSafeMode()) {
@@ -33,29 +32,20 @@ rex_extension::register('PACKAGES_INCLUDED', function () {
     }
 });
 
-rex_view::addCssFile($this->getAssetsUrl('bqc.css'));
+rex_view::addCssFile($addon->getAssetsUrl('bqc.css'));
 
-rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
-    $suchmuster = '<h4 class="rex-nav-main-title">[translate:navigation_base_addon]</h4>';
-    $ersetzen = '<div class="rex-nav-main-title" style="padding:0px; margin-bottom: 14px;"></div>';
-    $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
-});
+/**
+ * automatisch erzeugten Titel für die eigene Navigationsgruppe "base_addon"
+ * entfernen durch bereitstellen eines leeren Textes. CSS sorgt dann für die Optik.
+ */
+rex_i18n::addMsg('navigation_base_addon', '');
+
 
 if (isset($_GET['page']) && is_string($_GET['page']) && preg_match('/base_quality_check/', $_GET['page'])) {
-    rex_view::addJsFile($this->getAssetsUrl('bqc.js'));
+    rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));
 
     rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
         $ep->setSubject(str_replace('class="rex-page-main', 'class="bqc-addon rex-page-main', $ep->getSubject()));
-    });
-
-    $replacements = [
-        '<title>Backend &lt;div id=&quot;backendcount&quot;&gt;&lt;/div&gt;' => '<title>Backend ',
-        '<title>Frontend &lt;div id=&quot;frontendcount&quot;&gt;&lt;/div&gt;' => '<title>Frontend ',
-        '<title>Live &lt;div id=&quot;livecount&quot;&gt;&lt;/div&gt;' => '<title>Live ',
-    ];
-
-    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) use ($replacements) {
-        $ep->setSubject(strtr($ep->getSubject(), $replacements));
     });
 }
 
@@ -70,94 +60,39 @@ if ('' !== $func && '' !== $id) {
     $sql->update();
 }
 
-function updateTaskscounter()
-{
-    $all_tasks = BaseQualityCheck::query()->where('status', 1)->count();
-    $all_tasks_checked = BaseQualityCheck::query()->where('check', 1)->where('status', 1)->count();
-    $all_tasks_checked_percentage = (int) round(($all_tasks_checked / $all_tasks) * 100, 0);
+/**
+ * Menüpunkt im Hauptmenu mit zusätzlichem HTML-Container für den Füllstand
+ * versehen und per Query den Füllstand ermitteln und eintragen.
+ */
+rex_extension::register('PAGES_PREPARED', static function ($ep) {
 
-    $all_frontend_tasks = BaseQualityCheck::query()->where('group', 1)->where('status', 1)->count();
-    $all_frontend_tasks_checked = BaseQualityCheck::query()->where('group', 1)->where('check', 1)->where('status', 1)->count();
-    $frontend_tasks_checked_percentage = (int) round(($all_frontend_tasks_checked / $all_frontend_tasks) * 100, 0);
-
-    $all_backend_tasks = BaseQualityCheck::query()->where('group', 2)->where('status', 1)->count();
-    $all_backend_tasks_checked = BaseQualityCheck::query()->where('group', 2)->where('check', 1)->where('status', 1)->count();
-    $backend_tasks_checked_percentage = (int) round(($all_backend_tasks_checked / $all_backend_tasks) * 100, 0);
-
-    $all_live_tasks = BaseQualityCheck::query()->where('group', 3)->where('status', 1)->count();
-    $all_live_tasks_checked = BaseQualityCheck::query()->where('group', 3)->where('check', 1)->where('status', 1)->count();
-    $live_tasks_checked_percentage = (int) round(($all_live_tasks_checked / $all_live_tasks) * 100, 0);
-
-    $color = getColorByPercentage($all_tasks_checked_percentage);
-    $color_frontend = getColorByPercentage($frontend_tasks_checked_percentage);
-    $color_backend = getColorByPercentage($backend_tasks_checked_percentage);
-    $color_live = getColorByPercentage($live_tasks_checked_percentage);
-
-    $script = "<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			var element = document.querySelector('#rex-navi-page-base-quality-check a');
-			var newText = document.createElement('span');
-			newText.style.backgroundColor = '{$color}';
-			newText.style.color = '#000';
-			newText.innerHTML = ' {$all_tasks_checked_percentage}%';
-			element.appendChild(newText);
-		});
-	";
-
-    if (isset($_GET['page']) && is_string($_GET['page']) && preg_match('/base_quality_check/', $_GET['page'])) {
-        $script .= "
-		document.addEventListener('DOMContentLoaded', function() {
-			var element = document.querySelector('#frontendcount');
-			var newText = document.createElement('span');
-			newText.style.backgroundColor = '{$color_frontend}';
-			newText.style.color = '#000';
-			newText.innerHTML = '{$all_frontend_tasks_checked} | {$all_frontend_tasks}';
-			element.appendChild(newText);
-
-			var element = document.querySelector('#backendcount');
-			var newText = document.createElement('span');
-			newText.style.backgroundColor = '{$color_backend}';
-			newText.style.color = '#000';
-			newText.innerHTML = '{$all_backend_tasks_checked} | {$all_backend_tasks}';
-			element.appendChild(newText);
-
-			var element = document.querySelector('#livecount');
-			var newText = document.createElement('span');
-			newText.style.backgroundColor = '{$color_live}';
-			newText.style.color = '#000';
-			newText.innerHTML = '{$all_live_tasks_checked} | {$all_live_tasks}';
-			element.appendChild(newText);
-		});
-		";
+    $pages = $ep->getSubject();
+    if (!isset($pages['base_quality_check'])) {
+        return;
     }
 
-    $script .= '
-	</script>';
+    // Füllstand berechnen
+    $status = BaseQualityCheck::query()
+        ->resetSelect()
+        ->select('id')
+        ->select('check')
+        ->selectRaw('COUNT(id)', 'ct')
+        ->where('status', 1)
+        ->groupBy('check')
+        ->find()
+        ->toKeyValue('check', 'ct');
+    $sum = array_sum($status);
+    $checked = $status[1] ?? 0;
+    $quota = round($checked / $sum * 100, 0);
 
-    return $script;
-}
-
-function getColorByPercentage($percentage)
-{
-    $color = '#FF0000';
-
-    if ($percentage >= 0 && $percentage < 25) {
-        $color = '#FF0000';
-    } elseif ($percentage < 50) {
-        $color = '#EE4420';
-    } elseif ($percentage < 75) {
-        $color = '#DD8850';
-    } elseif ($percentage < 99) {
-        $color = '#ACCE40';
-    } elseif (100 == $percentage) {
-        $color = '#49AD50';
-    }
-
-    return $color;
-}
-
-rex_extension::register('PACKAGES_INCLUDED', static function () {
-    if (rex_addon::get('base_quality_check')->isInstalled()) {
-        echo updateTaskscounter();
-    }
+    // Menüpunkt markieren
+    $page = $pages['base_quality_check'];
+    $name = $page->getTitle();
+    $name = sprintf(
+        '%s <span class="bqc-badge %s">%d %%</span>',
+        $name,
+        BqcTools::quotaClass($quota),
+        $quota,
+    );
+    $page->setTitle($name);
 });

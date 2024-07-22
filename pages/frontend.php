@@ -1,7 +1,8 @@
 <?php
 
 $group = 1;
-$pagetitle = 'Frontend';
+$page = rex_be_controller::getCurrentPageObject();
+$pagetitle = $page->getTitle();
 
 $page_fragment = new rex_fragment();
 $page_fragment->setVar('group',$group,false);

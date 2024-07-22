@@ -75,3 +75,40 @@
 .bqc-addon .rex-code {
     background: #fff;
 }
+
+/**
+ * Farbcodierung der Füllstandsanzeige
+ * .bcq-addon greift erst für den Seiteninhalt, nicht für das Hauptmenü. Daher
+ * stehen diese Klassen außerhalb von .bcq-addon
+ */
+.bqc-badge {
+}
+.bqc-badge-danger {
+    background-color: #FF0000;
+    color: white;
+}
+.bqc-badge-warning {
+    background-color: #EE4420;
+    color: white;
+}
+.bqc-badge-primary {
+    background-color: #DD8850;
+    color: white;
+}
+.bqc-badge-info {
+    background-color: #ACCE40;
+    color: black;
+}
+.bqc-badge-success {
+    background-color: #49AD50;
+    color: white;
+}
+
+/**
+ * Das BQC-Addon hat eine eigene Gruppe, aber ohne Titel. Selbiger wird per PHP
+ * entfernt. Des verbliebene HTML wird hiermit auf Höhe 0px gesetzt.
+ */
+.rex-nav-main-title:empty {
+    padding:0px;
+}
+ 
