@@ -2,6 +2,14 @@
 Base Quality Check - Changelog
 ================================================================================
 
+## Version 1.5.0  - 22.07.2024
+
+- Füllstandsanzeige nur mit PHP, kein JS. Danke an [christophboecker](https://github.com/christophboecker)
+
+## Version 1.4.0  - 21.07.2024
+
+- Namespace / PSR angleichen. Danke an [christophboecker](https://github.com/christophboecker)
+
 ## Version 1.3.2 - 17.07.2024
 
 - Fehlerbehbung
@@ -14,7 +22,7 @@ Base Quality Check - Changelog
 
 ## Version 1.3.0 - 15.07.2024
 
-- Nutzung von Namespaces.  Danke an [skerbis](https://github.com/skerbis)
+- Nutzung von Namespaces. Danke an [skerbis](https://github.com/skerbis)
 - Anpassung Light Mode
 
 ## Version 1.2.3 - 15.07.2024
