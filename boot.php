@@ -6,29 +6,36 @@ use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckSubGroup;
 
 $addon = rex_addon::get('base_quality_check');
 
-if (rex_addon::get('yform')->isAvailable() && !rex::isSafeMode()) {
-    rex_yform_manager_dataset::setModelClass(
-        'rex_base_quality_check',
-        BaseQualityCheck::class,
-    );
-    rex_yform_manager_dataset::setModelClass(
-        'rex_base_quality_check_group',
-        BaseQualityCheckGroup::class,
-    );
-    rex_yform_manager_dataset::setModelClass(
-        'rex_base_quality_check_sub_group',
-        BaseQualityCheckSubGroup::class,
-    );
+/**
+ * Alles nur sinnvoll im BE. Wenn FE direkt abbrechen.
+ * Alles Weitere ist inhaltsbezogen und unterbleibt im SafeMode
+ * ->Addon-Seiten komplett ausblenden
+ * TODO: sind noch andere (BE-)Situationen ein Auschlußgrund? Console?
+ */
+if (rex::isFrontend()) {
+    return;
+}
+if (rex::isSafeMode()) {
+    $addon->removeProperty('page');
+    return;
 }
 
+/**
+ * CSS benötigen wir so oder so.
+ * 
+ * Kleine Vorarbeit on Demand: SCSS neu kompilieren
+ * Auslöser ist die Property 'compile' auf «true».
+ */
 rex_extension::register('PACKAGES_INCLUDED', function () {
-    if (rex::getUser() && true === $this->getProperty('compile')) {
+    $addon = rex_addon::get('base_quality_check');
+    if (true === $addon->getProperty('compile',false)) {
         $compiler = new rex_scss_compiler();
-        $scss_files = rex_extension::registerPoint(new rex_extension_point('BE_STYLE_SCSS_FILES', [$this->getPath('scss/bqc.scss')]));
+        $scss_files = rex_extension::registerPoint(new rex_extension_point('BE_STYLE_SCSS_FILES', [$addon->getPath('scss/bqc.scss')]));
         $compiler->setScssFile($scss_files);
-        $compiler->setCssFile($this->getPath('assets/bqc.css'));
+        $compiler->setCssFile($addon->getPath('assets/bqc.css'));
         $compiler->compile();
-        rex_file::copy($this->getPath('assets/bqc.css'), $this->getAssetsPath('bqc.css'));
+        rex_file::copy($addon->getPath('assets/bqc.css'), $addon->getAssetsPath('bqc.css'));
+        $addon->removeProperty('compile');
     }
 });
 
@@ -36,42 +43,71 @@ rex_view::addCssFile($addon->getAssetsUrl('bqc.css'));
 
 /**
  * automatisch erzeugten Titel für die eigene Navigationsgruppe "base_addon"
- * entfernen durch bereitstellen eines leeren Textes. CSS sorgt dann für die Optik.
+ * entfernen durch "Bereitstellen" eines leeren Textes. CSS sorgt dann für die Optik.
+ * TODO: könnte man auch in einer .lang-Datei unterbringen.
+ * 
+ * STAN: RexStan meckert hier an, dass der Text eigentlich nicht leer sein darf.
+ * @phpstan-ignore-next-line
  */
 rex_i18n::addMsg('navigation_base_addon', '');
 
-
-if (isset($_GET['page']) && is_string($_GET['page']) && preg_match('/base_quality_check/', $_GET['page'])) {
-    rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));
-
-    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
-        $ep->setSubject(str_replace('class="rex-page-main', 'class="bqc-addon rex-page-main', $ep->getSubject()));
-    });
-}
-
-$func = rex_request('func', 'string');
-$id = rex_request('id', 'int');
-
-if ('' !== $func && '' !== $id) {
-    $sql = rex_sql::factory();
-    $sql->setTable('rex_base_quality_check');
-    $sql->setWhere('id = :id', ['id' => $id]);
-    $sql->setValue('check', 'checktask' == $func ? 1 : 0);
-    $sql->update();
+/**
+ * Ohne YForm geht es nicht. Wenn YForm nicht aktiv ist, wird das Addon
+ * ausgeblendet und ein Logeintrag geschrieben
+ * TODO: einfach eine Exception werfen weil das Addon eh nur für Admins zugänglich und es zu 99.9% ein Entwicklerfehler ist.
+ */
+if (!rex_addon::get('yform')->isAvailable()) {
+    $msg = sprintf(
+        'Addon «%s» benötige das Addon «YForm»! «YForm» ist momentan nicht verfügbar. Abbruch.',
+        $addon->getName(),
+    );
+    rex_logger::factory()->error($msg);
+    $addon->removeProperty('page');
+    return;
 }
 
 /**
- * Menüpunkt im Hauptmenu mit zusätzlichem HTML-Container für den Füllstand
- * versehen und per Query den Füllstand ermitteln und eintragen.
+ * ModelClasses zuweisen.
+ */
+rex_yform_manager_dataset::setModelClass(
+    'rex_base_quality_check',
+    BaseQualityCheck::class,
+);
+rex_yform_manager_dataset::setModelClass(
+    'rex_base_quality_check_group',
+    BaseQualityCheckGroup::class,
+);
+rex_yform_manager_dataset::setModelClass(
+    'rex_base_quality_check_sub_group',
+    BaseQualityCheckSubGroup::class,
+);
+
+/**
+ * Erst nachdem alle Packages geladen sind können diese beiden Aktionen ablaufen
+ * 1) Aus dem Aufruf der Seite ggf. einen Check-Haken setzen/entfernen
+ * 2) Menüpunkt im Hauptmenu erweitern und stylen (Füllstandsanzeige).
  */
 rex_extension::register('PAGES_PREPARED', static function ($ep) {
 
-    $pages = $ep->getSubject();
-    if (!isset($pages['base_quality_check'])) {
-        return;
+    /**
+     * Ggf. in der URL stehende Parameter auswerten und verarbeiten
+     * func=checktask bzw. func=unchecktask   "check" auf 1 oder 0 setzen
+     * id=satznummer                          Satznummer in BaseQualityCheck.
+     */
+    $func = rex_request::request('func', 'string', '');
+    if ('checktask' === $func || 'unchecktask' === $func) {
+        $id = rex_request::request('id', 'int', 0);
+        $data = BaseQualityCheck::get($id);
+        if (null !== $data) {
+            $data->setCheck('checktask' === $func ? 1 : 0);
+            $data->save();
+        }
     }
 
-    // Füllstand berechnen
+    /**
+     * Füllstand berechnen und den Menütitel um die Anzeige
+     * erweitern.
+     */
     $status = BaseQualityCheck::query()
         ->resetSelect()
         ->select('id')
@@ -85,14 +121,30 @@ rex_extension::register('PAGES_PREPARED', static function ($ep) {
     $checked = $status[1] ?? 0;
     $quota = round($checked / $sum * 100, 0);
 
-    // Menüpunkt markieren
-    $page = $pages['base_quality_check'];
-    $name = $page->getTitle();
+    $page = rex_be_controller::getPageObject('base_quality_check');
     $name = sprintf(
         '%s <span class="bqc-badge %s">%d %%</span>',
-        $name,
+        $page->getTitle(),
         BqcTools::quotaClass($quota),
         $quota,
     );
     $page->setTitle($name);
+});
+
+/**
+ * Die weiteren Aktionen (im BE) sind nur notwendig, wenn die Addon-Seite selbst
+ * aufgerufen wird.
+ */
+if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
+    return;
+}
+
+/**
+ * JS einbinden.
+ * 
+ */
+rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));
+
+rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+    $ep->setSubject(str_replace('class="rex-page-main', 'class="bqc-addon rex-page-main-inner', $ep->getSubject()));
 });
