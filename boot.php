@@ -140,8 +140,8 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
 }
 
 /**
- * JS einbinden.
- * 
+ * JS einbinden und eine identifizierende CSS-Klasse hinzufügen
+ * TODO: prüfen, ob man die Klasse via index.php setzt oder auf dem <body>. => OUTPUT_FILTER raus
  */
 rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));
 
