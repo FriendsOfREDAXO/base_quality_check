@@ -8,15 +8,8 @@ $addon = rex_addon::get('base_quality_check');
 
 /**
  * Alles nur sinnvoll im BE. Wenn FE direkt abbrechen.
- * Alles Weitere ist inhaltsbezogen und unterbleibt im SafeMode
- * ->Addon-Seiten komplett ausblenden
- * TODO: sind noch andere (BE-)Situationen ein Auschlußgrund? Console?
  */
 if (rex::isFrontend()) {
-    return;
-}
-if (rex::isSafeMode()) {
-    $addon->removeProperty('page');
     return;
 }
 
@@ -50,21 +43,6 @@ rex_view::addCssFile($addon->getAssetsUrl('bqc.css'));
  * @phpstan-ignore-next-line
  */
 rex_i18n::addMsg('navigation_base_addon', '');
-
-/**
- * Ohne YForm geht es nicht. Wenn YForm nicht aktiv ist, wird das Addon
- * ausgeblendet und ein Logeintrag geschrieben
- * TODO: einfach eine Exception werfen weil das Addon eh nur für Admins zugänglich und es zu 99.9% ein Entwicklerfehler ist.
- */
-if (!rex_addon::get('yform')->isAvailable()) {
-    $msg = sprintf(
-        'Addon «%s» benötige das Addon «YForm»! «YForm» ist momentan nicht verfügbar. Abbruch.',
-        $addon->getName(),
-    );
-    rex_logger::factory()->error($msg);
-    $addon->removeProperty('page');
-    return;
-}
 
 /**
  * ModelClasses zuweisen.
@@ -144,7 +122,3 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
  * TODO: prüfen, ob man die Klasse via index.php setzt oder auf dem <body>. => OUTPUT_FILTER raus
  */
 rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));
-
-rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
-    $ep->setSubject(str_replace('class="rex-page-main', 'class="bqc-addon rex-page-main-inner', $ep->getSubject()));
-});

@@ -81,12 +81,17 @@ foreach($group2page as $groupId=>$groupPageName) {
 }
 
 /**
- * Seitenheader aufbauen, anschließend die Titel wieder auf den
- * Stand ohne Zähler zurücksetzen
+ * Ausgabe der Seiten: 
+ * 
+ * 1) Seitenheader aufbauen, anschließend die Titel wieder auf den
+ *    Stand ohne Zähler zurücksetzen
+ * 2) Den jeweiligen Content ausgeben
+ * 3) Alles in einen <DIV> mit einer für das CSS identifizieren Klasse einpacken
  */
+echo '<div class="bqc-addon">';
 echo rex_view::title('Base Quality Check');
 foreach( $title4reset as $name=>$groupPage) {
     $groupPage->setTitle($name);
 }
-/** */
 rex_be_controller::includeCurrentPageSubPath();
+echo '</div>';
