@@ -15,13 +15,13 @@ if (rex::isFrontend()) {
 
 /**
  * CSS benötigen wir so oder so.
- * 
+ *
  * Kleine Vorarbeit on Demand: SCSS neu kompilieren
  * Auslöser ist die Property 'compile' auf «true».
  */
-rex_extension::register('PACKAGES_INCLUDED', function () {
+rex_extension::register('PACKAGES_INCLUDED', static function () {
     $addon = rex_addon::get('base_quality_check');
-    if (true === $addon->getProperty('compile',false)) {
+    if (true === $addon->getProperty('compile', false)) {
         $compiler = new rex_scss_compiler();
         $scss_files = rex_extension::registerPoint(new rex_extension_point('BE_STYLE_SCSS_FILES', [$addon->getPath('scss/bqc.scss')]));
         $compiler->setScssFile($scss_files);
@@ -38,7 +38,7 @@ rex_view::addCssFile($addon->getAssetsUrl('bqc.css'));
  * automatisch erzeugten Titel für die eigene Navigationsgruppe "base_addon"
  * entfernen durch "Bereitstellen" eines leeren Textes. CSS sorgt dann für die Optik.
  * TODO: könnte man auch in einer .lang-Datei unterbringen.
- * 
+ *
  * STAN: RexStan meckert hier an, dass der Text eigentlich nicht leer sein darf.
  * @phpstan-ignore-next-line
  */
@@ -66,7 +66,6 @@ rex_yform_manager_dataset::setModelClass(
  * 2) Menüpunkt im Hauptmenu erweitern und stylen (Füllstandsanzeige).
  */
 rex_extension::register('PAGES_PREPARED', static function ($ep) {
-
     /**
      * Ggf. in der URL stehende Parameter auswerten und verarbeiten
      * func=checktask bzw. func=unchecktask   "check" auf 1 oder 0 setzen
@@ -119,6 +118,6 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
 
 /**
  * JS einbinden und eine identifizierende CSS-Klasse hinzufügen
- * TODO: prüfen, ob man die Klasse via index.php setzt oder auf dem <body>. => OUTPUT_FILTER raus
+ * TODO: prüfen, ob man die Klasse via index.php setzt oder auf dem <body>. => OUTPUT_FILTER raus.
  */
 rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));

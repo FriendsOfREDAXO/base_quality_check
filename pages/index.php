@@ -2,10 +2,10 @@
 
 /**
  * Zuerst werden aus der Datenbank die Informationen über abgehakte bzw. insg.
- * vorhandene Prüfobjekte ermittelt (gruppiert nach Gruppe und ja/nein)
- * 
+ * vorhandene Prüfobjekte ermittelt (gruppiert nach Gruppe und ja/nein).
+ *
  * Die zugehörigen Seitentitel werden um die Ergebnisse ergänzt.
- * 
+ *
  * Dann erst wird die Addon-Seite aufgebaut
  */
 
@@ -15,20 +15,20 @@ use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
 
 /**
  * Für alle Gruppen die Checks abfragen; gruppiert wird über Gruppe und Check
- * Daraus ein Status-Array erstellen: [gruppe][check] = anzahl
+ * Daraus ein Status-Array erstellen: [gruppe][check] = anzahl.
  */
 $data = BaseQualityCheck::query()
     ->resetSelect()
     ->select('id')
     ->select('group')
     ->select('check')
-    ->selectRaw('COUNT(id)','ct')
-    ->where('status',1)
+    ->selectRaw('COUNT(id)', 'ct')
+    ->where('status', 1)
     ->groupBy('group')
     ->groupBy('check')
     ->find();
 $status = [];
-foreach( $data as $item) {
+foreach ($data as $item) {
     $status[$item->getValue('group')][$item->getValue('check')] = $item->getValue('ct');
 }
 
@@ -51,22 +51,22 @@ $subPages = $page->getParent()->getSubpages();
  * unterschiedliche Farben gesetzt.
  */
 $title4reset = [];
-foreach($group2page as $groupId=>$groupPageName) {
+foreach ($group2page as $groupId => $groupPageName) {
     // Komisch! Es gibt die Seite nicht.
     // TODO: ggf. hier eine Developer-Exception werfen
-    if( !isset($subPages[$groupPageName])) {
+    if (!isset($subPages[$groupPageName])) {
         continue;
     }
     // Komisch! das ist eine Gruppe, zu der es keine Einträge gibt?
     // TODO: ggf. hier eine Developer-Exception werfen
-    if( !isset($status[$groupId])) {
+    if (!isset($status[$groupId])) {
         continue;
     }
 
     $sum = array_sum($status[$groupId]);
-    $checked = isset($status[$groupId][1]) ? $status[$groupId][1] : 0;
-    $quota = round($checked/$sum*100,0);
-    
+    $checked = $status[$groupId][1] ?? 0;
+    $quota = round($checked / $sum * 100, 0);
+
     $groupPage = $subPages[$groupPageName];
     $name = $groupPage->getTitle();
     $title4reset[$name] = $groupPage;
@@ -81,8 +81,8 @@ foreach($group2page as $groupId=>$groupPageName) {
 }
 
 /**
- * Ausgabe der Seiten: 
- * 
+ * Ausgabe der Seiten:
+ *
  * 1) Seitenheader aufbauen, anschließend die Titel wieder auf den
  *    Stand ohne Zähler zurücksetzen
  * 2) Den jeweiligen Content ausgeben
@@ -90,7 +90,7 @@ foreach($group2page as $groupId=>$groupPageName) {
  */
 echo '<div class="bqc-addon">';
 echo rex_view::title('Base Quality Check');
-foreach( $title4reset as $name=>$groupPage) {
+foreach ($title4reset as $name => $groupPage) {
     $groupPage->setTitle($name);
 }
 rex_be_controller::includeCurrentPageSubPath();
