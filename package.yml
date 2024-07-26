@@ -28,6 +28,7 @@ page:
 requires:
   redaxo: '^5.15'
   yform: '^4.2.1'
+  yform/manager: '^4.2.1'
 
 installer_ignore:
     - .git
