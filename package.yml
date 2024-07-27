@@ -11,11 +11,11 @@ page:
   block: base_addon  
   subpages:
     frontend:   
-      title: Frontend <div id="frontendcount"></div>
+      title: Frontend
     backend:   
-      title: Backend <div id="backendcount"></div>   
+      title: Backend   
     live:   
-      title: Live <div id="livecount"></div>            
+      title: Live          
     readme:
         title: Info
         subPath: README.md
@@ -28,6 +28,7 @@ page:
 requires:
   redaxo: '^5.15'
   yform: '^4.2.1'
+  yform/manager: '^4.2.1'
 
 installer_ignore:
     - .git
