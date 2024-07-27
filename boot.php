@@ -36,8 +36,8 @@ rex_view::addCssFile($addon->getAssetsUrl('bqc.css'));
 
 /**
  * automatisch erzeugten Titel für die eigene Navigationsgruppe "base_addon"
- * entfernen durch "Bereitstellen" eines leeren Textes. CSS sorgt dann für die Optik.
- * TODO: könnte man auch in einer .lang-Datei unterbringen.
+ * entfernen durch "Bereitstellen" eines leeren Textes. CSS sorgt dann für die
+ * Optik. (klappt nur so, nicht per .lang-Datei)
  *
  * STAN: RexStan meckert hier an, dass der Text eigentlich nicht leer sein darf.
  * @phpstan-ignore-next-line
@@ -117,7 +117,6 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
 }
 
 /**
- * JS einbinden und eine identifizierende CSS-Klasse hinzufügen
- * TODO: prüfen, ob man die Klasse via index.php setzt oder auf dem <body>. => OUTPUT_FILTER raus.
+ * JS für die BE-Seite des Addons einbinden
  */
 rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));
