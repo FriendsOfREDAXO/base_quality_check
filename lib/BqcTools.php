@@ -1,24 +1,27 @@
 <?php
 
-/**
- * Service-Klasse mit Tools
- */
-class BqcTools {
+namespace FriendsOfRedaxo\BaseQualityCheck;
 
+/**
+ * Service-Klasse mit Tools.
+ */
+class BqcTools
+{
     /**
      * Übersetzt einen %-Satz (Erreichnungsgrad, Füllgrad) in CSS-Klassen
-     * zur farblichen Darstellung
+     * zur farblichen Darstellung.
      */
-    static public function quotaClass(int|float $quota) : string {
+    public static function quotaClass(int|float $quota): string
+    {
         if ($quota < 25) {
             $class = 'bqc-badge-danger';
         } elseif ($quota < 50) {
             $class = 'bqc-badge-warning';
         } elseif ($quota < 75) {
             $class = 'bqc-badge-primary';
-        } elseif ($quota < 99) {
+        } elseif ($quota < 100) {
             $class = 'bqc-badge-info';
-        } elseif (100 == $quota) {
+        } else {
             $class = 'bqc-badge-success';
         }
         return $class;
