@@ -3,6 +3,7 @@
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckGroup;
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckSubGroup;
+use FriendsOfRedaxo\BaseQualityCheck\BqcTools;
 
 $addon = rex_addon::get('base_quality_check');
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace FriendsOfRedaxo\BaseQualityCheck;
+
 /**
  * Service-Klasse mit Tools
  */
@@ -16,9 +18,9 @@ class BqcTools {
             $class = 'bqc-badge-warning';
         } elseif ($quota < 75) {
             $class = 'bqc-badge-primary';
-        } elseif ($quota < 99) {
+        } elseif ($quota < 100) {
             $class = 'bqc-badge-info';
-        } elseif (100 == $quota) {
+        } else {
             $class = 'bqc-badge-success';
         }
         return $class;

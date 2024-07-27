@@ -10,6 +10,7 @@
  */
 
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
+use FriendsOfRedaxo\BaseQualityCheck\BqcTools;
 
 /** @var rex_addon $this */
 
