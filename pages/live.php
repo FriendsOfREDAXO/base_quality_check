@@ -1,12 +1,20 @@
 <?php
 
+use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
+
 $group = 3;
 $page = rex_be_controller::getCurrentPageObject();
 $pagetitle = $page->getTitle();
 
+$tasklist = BaseQualityCheck::query()
+    ->where('status', 1, '=')
+    ->where('group', $group, '=')
+    ->orderBy('prio', 'ASC')
+    ->find();
+
 $page_fragment = new rex_fragment();
-$page_fragment->setVar('group',$group,false);
-$page_fragment->setVar('pagetitle',$pagetitle,false);
+$page_fragment->setVar('group', $group, false);
+$page_fragment->setVar('tasklist', $tasklist);
 
 $fragment = new \rex_fragment();
 $fragment->setVar('title', $pagetitle, false);

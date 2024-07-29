@@ -111,4 +111,42 @@
 .rex-nav-main-title:empty {
     padding:0px;
 }
- 
+
+/**
+ * Formatierung der Taskliste
+ */
+.bqc-addon {
+
+    .bqc-table {
+
+        .collapsed .fa-caret-up {
+            transform: rotate(180deg);
+        }
+        header > .panel-title:hover {
+            cursor: pointer;
+        }
+        
+        .bqc-table-col1 {
+            width: 120px;
+        }
+        .bqc-table-col2 {
+            width: 40px;
+        }
+        .bqc-table-col3 {
+            width: 250px;
+        }
+        //.bqc-table-col4 {
+        //     void
+        //}
+        
+        td:nth-child(2) {
+            text-align:center;
+            font-weight: bold;
+        }
+        td:nth-child(3) {
+            font-weight: bold;
+        }
+
+    }
+    
+}

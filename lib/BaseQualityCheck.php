@@ -53,14 +53,14 @@ class BaseQualityCheck extends rex_yform_manager_dataset
 
     /* Gruppe */
     /** @api */
-    public function getGroup(): ?rex_yform_manager_dataset
+    public function getGroup(): ?BaseQualityCheckGroup
     {
         return $this->getRelatedDataset('group');
     }
 
     /* Untergruppe */
     /** @api */
-    public function getSubgroup(): ?rex_yform_manager_dataset
+    public function getSubgroup(): ?BaseQualityCheckSubGroup
     {
         return $this->getRelatedDataset('subgroup');
     }
@@ -131,7 +131,8 @@ class BaseQualityCheck extends rex_yform_manager_dataset
     }
 
     // Beispiel einer getPrio Methode
-    public function getPrio()
+    /** @api */
+    public function getPrio(): int
     {
         // Angenommen, es gibt eine Eigenschaft $prio, die die Priorität speichert
         return $this->prio;
