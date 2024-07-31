@@ -3,6 +3,7 @@ version: 1.6.0
 author: 'Friends Of REDAXO'
 supportpage: https://github.com/FriendsOfREDAXO/base_quality_check
 compile: false
+
 page:
   title: Base Quality Check
   icon: rex-icon fa-check check
