@@ -18,7 +18,8 @@ $rows = [];
 foreach ($tasklist as $task) {
 
     /**
-     * 
+     * Ermitteln, ob die Task erlefigt ist
+     * Die Zeile der Tabelle entsprechend markieren
      */
     $isCompleted = 1 == $task->getCheck();
 
