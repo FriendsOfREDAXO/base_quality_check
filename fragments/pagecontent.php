@@ -16,8 +16,15 @@ $tasklist = $this->getVar('tasklist',[]);
 $currentSubGroup = '';
 $rows = [];
 foreach ($tasklist as $task) {
+
+    /**
+     * Ermitteln, ob die Task erlefigt ist
+     * Die Zeile der Tabelle entsprechend markieren
+     */
+    $isCompleted = 1 == $task->getCheck();
+
     $column = [];
-    $column[] = '<tr>';
+    $column[] = '<tr class="'.($isCompleted ? 'bqc-completed' : '').'">';
 
     /**
      * Spalte 1: Name der Untergruppe mit Gruppenwechsel (nur in der ersten Zeile).
@@ -36,23 +43,14 @@ foreach ($tasklist as $task) {
     /**
      * Spalte 2: Check-Element.
      */
-    if (1 == $task->getCheck()) {
-        $checked = 'checked';
-        $link = '<a class="tasklink" href="' . rex_url::currentBackendPage(['func' => 'unchecktask', 'id' => $task->getId()]) . '" title="Als unerledigt markieren">
-                    <svg  xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24" fill="none"  stroke="#62A959" stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round" >
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
-                            <path d="M9 12l2 2l4 -4" />
-                    </svg>
-
-                    </a>';
-    } else {
-        $checked = '';
-        $link = '<a class="tasklink" href="' . rex_url::currentBackendPage(['func' => 'checktask', 'id' => $task->getId()]) . '" title="Als erledigt markieren">
-                    <svg  xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 24 24"  fill="none"  stroke="darkgrey"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round" >
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
-                    </svg>
-                </a>';
-    }
+    $action = $isCompleted ? 'unchecktask' : 'checktask';
+    $label = $isCompleted ? 'Als unerledigt markieren' : 'Als erledigt markieren';
+    $link = '<a class="tasklink" href="' . rex_url::currentBackendPage(['func' => $action, 'id' => $task->getId()]) . '" title="'.$label.'">
+                <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round" >
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                        <path class="checkmark" d="M9 12l2 2l4 -4" />
+                </svg>
+             </a>';
     $column[] = '<td>' . $link . '</td>';
 
     /**
@@ -85,15 +83,12 @@ foreach ($tasklist as $task) {
         }
 
     if (0 === count($infoset)) {
-        $column[] = '<td><div class="panel-title ' . $checked . ' pl-title">' . $task->getSecondTitle() . '</div></td>';
+        $column[] = '<td><div class="bqc-tasktitle">' . $task->getSecondTitle() . '</div></td>';
     } else {
         $column[] = '<td>
-            <header class="collapsed ' . $checked . '" data-toggle="collapse" data-target="#bqc-collapse-' . $task->getId() . '" aria-expanded="false">
-                <div class="panel-title">
-                    <i class="fa fa-caret-up"></i>
+            <div class="collapsed bqc-tasktitle" data-toggle="collapse" data-target="#bqc-collapse-' . $task->getId() . '" aria-expanded="false">
                 ' . $task->getSecondTitle() . '
-                </div>
-            </header>
+            </div>
             <div id="bqc-collapse-' . $task->getId() . '" class="panel panel-info collapse" aria-expanded="false">
                 ' . implode('', $infoset) . '
             </div></td>';
