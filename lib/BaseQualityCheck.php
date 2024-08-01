@@ -2,10 +2,33 @@
 
 namespace FriendsOfRedaxo\BaseQualityCheck;
 
+use rex_addon;
+use rex_yform;
 use rex_yform_manager_dataset;
 
 class BaseQualityCheck extends rex_yform_manager_dataset
 {
+    /**
+     * BaseQualityCheck unterstellt (ohne dies in der package.yml abzuprüfen)
+     * dass das Addon CKEditor-5 installiert ist. Wenn nicht, erfolgt das Fallback
+     * auf textarea-Standard.
+     * Dazu werden die Feldattribute ($e[5] beim textarea-Feld) entfernt.
+     */
+    public function getForm(): rex_yform
+    {
+        $yform = parent::getForm();
+
+        if(!rex_addon::get('cke5')->isAvailable()) {
+            foreach( $yform->objparams['form_elements'] as $k=>&$e) {
+                if($e[0] === 'textarea' && str_contains($e[5],'cke5-editor')) {
+                    $e[5] = '';
+                }
+            }
+        }
+
+        return $yform;
+    }
+
     /* Status */
     /** @api */
     public function getCheck(bool $asBool = false): mixed
