@@ -5,34 +5,32 @@
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
 
 /**
- * Variablen für das Fragment
+ * Variablen für das Fragment.
  */
 /** @var int $group */
 $group = $this->getVar('group', 0);
 
-/** @var rex_yform_manager_collection<BaseQualityCheck>|array{} $tasklist */
-$tasklist = $this->getVar('tasklist',[]);
+/** @var rex_yform_manager_collection<BaseQualityCheck> $tasklist */
+$tasklist = $this->getVar('tasklist', []);
 
 $currentSubGroup = '';
 $rows = [];
 foreach ($tasklist as $task) {
-
     /**
      * Ermitteln, ob die Task erlefigt ist
-     * Die Zeile der Tabelle entsprechend markieren
+     * Die Zeile der Tabelle entsprechend markieren.
      */
     $isCompleted = 1 == $task->getCheck();
 
     $column = [];
-    $column[] = '<tr class="'.($isCompleted ? 'bqc-completed' : '').'">';
+    $column[] = '<tr class="' . ($isCompleted ? 'bqc-completed' : '') . '">';
 
     /**
      * Spalte 1: Name der Untergruppe mit Gruppenwechsel (nur in der ersten Zeile).
      * Also für die Folgezeilen keinen Gruppentitel mehr ausgeben.
      * Es wird unterstellt, dass es die SubGroup gibt!
-     * 
      */
-    $subGroup = $task->getSubgroup()->getSubgroup();
+    $subGroup = $task->getValue('subgroupname');
     if ($currentSubGroup !== $subGroup) {
         $currentSubGroup = $subGroup;
         $column[] = '<td>' . $currentSubGroup . '</td>';
@@ -45,7 +43,7 @@ foreach ($tasklist as $task) {
      */
     $action = $isCompleted ? 'unchecktask' : 'checktask';
     $label = $isCompleted ? 'Als unerledigt markieren' : 'Als erledigt markieren';
-    $link = '<a class="tasklink" href="' . rex_url::currentBackendPage(['func' => $action, 'id' => $task->getId()]) . '" title="'.$label.'">
+    $link = '<a class="tasklink" href="' . rex_url::currentBackendPage(['func' => $action, 'id' => $task->getId()]) . '" title="' . $label . '">
                 <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round" >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 3m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
                         <path class="checkmark" d="M9 12l2 2l4 -4" />
@@ -97,7 +95,6 @@ foreach ($tasklist as $task) {
     $column[] = '</tr>';
 
     $rows[] = implode('', $column);
-
 }
 
 ?>
