@@ -14,15 +14,15 @@ class BqcTools
     public static function quotaClass(int|float $quota): string
     {
         if ($quota < 25) {
-            $class = 'bqc-badge-danger';
+            $class = 'bqc-badge-0';
         } elseif ($quota < 50) {
-            $class = 'bqc-badge-warning';
+            $class = 'bqc-badge-25';
         } elseif ($quota < 75) {
-            $class = 'bqc-badge-primary';
+            $class = 'bqc-badge-50';
         } elseif ($quota < 100) {
-            $class = 'bqc-badge-info';
+            $class = 'bqc-badge-75';
         } else {
-            $class = 'bqc-badge-success';
+            $class = 'bqc-badge-100';
         }
         return $class;
     }

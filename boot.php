@@ -24,7 +24,13 @@ rex_extension::register('PACKAGES_INCLUDED', static function () {
     $addon = rex_addon::get('base_quality_check');
     if (true === $addon->getProperty('compile', false)) {
         $compiler = new rex_scss_compiler();
-        $scss_files = rex_extension::registerPoint(new rex_extension_point('BE_STYLE_SCSS_FILES', [$addon->getPath('scss/bqc.scss')]));
+        // $compiler->setFormatter(\ScssPhp\ScssPhp\Formatter\Expanded::class);
+        $scss_files = rex_extension::registerPoint(new rex_extension_point('BE_STYLE_SCSS_FILES', [
+            rex_path::plugin('be_style', 'redaxo', 'scss/_variables.scss'),
+            rex_path::plugin('be_style', 'redaxo', 'scss/_variables-dark.scss'),
+            rex_path::addon('be_style', 'vendor/font-awesome/scss/_variables.scss'),
+            $addon->getPath('scss/bqc.scss'),
+        ]));
         $compiler->setScssFile($scss_files);
         $compiler->setCssFile($addon->getPath('assets/bqc.css'));
         $compiler->compile();

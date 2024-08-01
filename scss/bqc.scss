@@ -1,79 +1,165 @@
-.bqc-addon .pl-title {
-    margin-left: 17px;
+/**
+ * Für Zwecke dieses SCSS werden einige interne Variablen an zentraler Stelle (hier)
+ * definiert. Wenn irgend möglich werden sinnvolle(?) Werte aus der REDAXO-Einstellung
+ * (_variables.scss, _variables-dark.scss) aus dem Addon be_style genutzt.
+ */
+
+// Standard (light-mode) mit Basis _variables.scss
+
+$bqc-filling-level-color: $btn-success-color; // weiß
+$bqc-filling-level-color2: $btn-default-color; // schwarz
+$bqc-filling-level-bg-0: $brand-danger; // rot
+$bqc-filling-level-bg-25: $brand-warning; // gelb
+$bqc-filling-level-bg-50: $brand-info; // blau
+$bqc-filling-level-bg-75: lighten($brand-success, 20%); // hellgrün
+$bqc-filling-level-bg-100: $brand-success; // grün
+
+$bqc-toggleheader-offset: 2rem;
+$bqc-toggleheader-symbol-open: $fa-var-caret-down;
+$bqc-toggleheader-symbol-close: $fa-var-caret-up;
+$bqc-toggleheader-symbol-size: 150%;
+$bqc-toggleheader-symbol-indent: $thumbnail-padding;
+$bqc-infobox-top-margin: $padding-large-vertical;
+
+$bqc-badge-padding: $padding-xs-vertical $padding-xs-horizontal;
+$bqc-badge-fontsize: 70%; // ca 10px
+$bqc-badge-radius: $border-radius-base;
+$bqc-badge-margin: 2px 0 0 12px;
+
+$bqc-checkbox-height: $input-height-xs;
+$bqc-checkbox-color: $brand-success;
+$bqc-checkbox-color2: darken($brand-success, 20%);
+
+// darkMode mit Basis _variables-dark.scss
+
+$bqc-d-filling-level-color: $color-text-light; // weiß
+$bqc-d-filling-level-color2: $color-text-dark; // schwarz
+$bqc-d-filling-level-bg-0: $dark-brand-danger; // rot
+$bqc-d-filling-level-bg-25: $dark-brand-warning; // gelb
+$bqc-d-filling-level-bg-50: $dark-brand-info; // blau
+$bqc-d-filling-level-bg-75: lighten($alert-success-bg, 20%); // hellgrün
+$bqc-d-filling-level-bg-100: $alert-success-bg; // grün
+
+$bqc-d-checkbox-color: $alert-success-bg;
+$bqc-d-checkbox-color2: $alert-success-bg;
+
+/**
+ * Das BQC-Addon hat eine eigene Gruppe im Hauptmenü links, aber ohne Titel.
+ * Selbiger wird per PHP entfernt. Das verbliebene HTML nimmt Platz weg und 
+ * wird hiermit auf * Höhe 0px gesetzt.
+ */
+.rex-nav-main-title:empty {
+    padding: 0px;
 }
 
-.bqc-addon .size-6 {
-    width: 24px;
-    height: 24px;
-}
+/**
+ * Formatierung der Tasklisten in der Addon-Seite (innerhalb von div.bqc-addon)
+ */
+.bqc-addon {
 
-.bqc-addon .nav .nav-tabs a  {
-    display: flex;
-    flex-wrap: wrap;
-}
+    .bqc-table {
+        /**
+         * Der Text in Spalte 4 dient ggf zusätzlich als Toggle-Element um
+         * weitere Informationen darunter ein- bzw. auszublenden. 
+         * Das CSS blendet den zugehörigen An/Aus-Indikator ein. 
+         * padding schaft Platz für das Indikator-Symbol (:before)
+         */
 
-.bqc-addon .nav .nav-tabs  span,
-.bqc-addon .nav .nav-tabs span,
-#rex-navi-page-base-quality-check a span  {
-    float: right;
-    font-weight: bold;
-    font-size: 10px;
-    padding: 3px 5px 3px 5px;
-    margin: 2px 0 0 12px; 
-    border-radius: 3px;
-}
+        .bqc-tasktitle {
 
-.bqc-addon .panel-title.checked,
-.bqc-addon .checked .panel-title  {
-    opacity: 50%;
-    &:hover {
-        opacity: 100%;
+            padding-left: $bqc-toggleheader-offset;
+            position: relative;
+
+            // etwas Platz zwischen Titel und Panel
+            +.collapse {
+                margin-top: $bqc-infobox-top-margin;
+            }
+
+            // Indikator wenn es ein folgendes Collapse-Panel gibt
+            &[data-toggle="collapse"] {
+                cursor: pointer;
+
+                &:before {
+                    content: unquote("\"#{ $bqc-toggleheader-symbol-close }\"");
+                    font-size: $bqc-toggleheader-symbol-size;
+                    font: var(--fa-font-solid);
+                    -webkit-font-smoothing: antialiased;
+                    position: absolute;
+                    left: $bqc-toggleheader-symbol-indent;
+                }
+
+                &.collapsed:before {
+                    content: unquote("\"#{ $bqc-toggleheader-symbol-open }\"");
+                }
+
+            }
+        }
+
+        /*
+         * Sonstige Elemente in den Tabellenzeilen
+         * - tasklink und SVG: Darstellung der Checkbox
+         * - tr.bqc-completed: andere Darstellng wenn abgehakt
+         */
+        tr {
+
+            .tasklink svg {
+                height: $bqc-checkbox-height;
+                color: $bqc-checkbox-color;
+
+                .checkmark {
+                    display: none;
+                }
+            }
+
+            .tasklink:hover svg {
+                color: $bqc-checkbox-color2;
+                font-weight: bold;
+            }
+
+            &.bqc-completed {
+
+                .bqc-tasktitle:not(:hover) {
+                    color: $bqc-checkbox-color2;
+                }
+
+                .tasklink svg .checkmark {
+                    display: inline;
+                }
+
+            }
+        }
+
+        /**
+         * Die Spalten in der BE-Tabelle (Taskliste) der Addon-Page
+         * grundformatieren
+         */
+        .bqc-table-col1 {
+            width: 120px;
+        }
+
+        .bqc-table-col2 {
+            width: 40px;
+        }
+
+        .bqc-table-col3 {
+            width: 250px;
+        }
+
+        //.bqc-table-col4 {
+        //     void
+        //}
+
+        td:nth-child(2) {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        td:nth-child(3) {
+            font-weight: bold;
+        }
+
     }
-}
 
-.bqc-addon .collapsed .panel-title:hover {
-    cursor: pointer;
-}
-
-.bqc-addon .panel-title {
-    font-size: 18px;
-    svg {
-        width: 12px;
-        height: 12px;
-        margin-top: 3px;        
-        transform: rotate(0);
-    }
-}
-
-.bqc-addon .collapsed .panel-title {
-    cursor: pointer;
-    svg {
-        width: 12px;
-        height: 12px;
-        transform: rotate(270deg);
-    }
-}
-
-
-.bqc-addon .panel-collapse {
-    margin: 8px;
-    padding: 8px 8px 8px 10px!important;    
-    background: #DFE3E9;
-}
-
- .rex-theme-dark .bqc-addon .panel-collapse {
-    margin: 8px;
-    padding: 8px 8px 8px 10px!important;
-    background: #222B34;
-}
-
-
-.tasklink:hover svg {
-    stroke: #62A959 !important;
-}
-
-.bqc-addon .rex-code {
-    background: #fff;
 }
 
 /**
@@ -82,71 +168,107 @@
  * stehen diese Klassen außerhalb von .bcq-addon
  */
 .bqc-badge {
-}
-.bqc-badge-danger {
-    background-color: #FF0000;
-    color: white;
-}
-.bqc-badge-warning {
-    background-color: #EE4420;
-    color: white;
-}
-.bqc-badge-primary {
-    background-color: #DD8850;
-    color: white;
-}
-.bqc-badge-info {
-    background-color: #ACCE40;
-    color: black;
-}
-.bqc-badge-success {
-    background-color: #49AD50;
-    color: white;
-}
+    float: right;
+    font-weight: bold;
+    font-size: $bqc-badge-fontsize;
+    padding: $bqc-badge-padding;
+    margin: $bqc-badge-margin;
+    border-radius: $bqc-badge-radius;
+    color: $bqc-filling-level-color;
 
-/**
- * Das BQC-Addon hat eine eigene Gruppe, aber ohne Titel. Selbiger wird per PHP
- * entfernt. Des verbliebene HTML wird hiermit auf Höhe 0px gesetzt.
- */
-.rex-nav-main-title:empty {
-    padding:0px;
-}
-
-/**
- * Formatierung der Taskliste
- */
-.bqc-addon {
-
-    .bqc-table {
-
-        .collapsed .fa-caret-up {
-            transform: rotate(180deg);
-        }
-        header > .panel-title:hover {
-            cursor: pointer;
-        }
-        
-        .bqc-table-col1 {
-            width: 120px;
-        }
-        .bqc-table-col2 {
-            width: 40px;
-        }
-        .bqc-table-col3 {
-            width: 250px;
-        }
-        //.bqc-table-col4 {
-        //     void
-        //}
-        
-        td:nth-child(2) {
-            text-align:center;
-            font-weight: bold;
-        }
-        td:nth-child(3) {
-            font-weight: bold;
-        }
-
+    &.bqc-badge-0 {
+        // 0 - 24
+        background-color: $bqc-filling-level-bg-0;
     }
-    
+
+    &.bqc-badge-25 {
+        // 25 - 49
+        background-color: $bqc-filling-level-bg-25;
+    }
+
+    &.bqc-badge-50 {
+        // 50 - 74
+        background-color: $bqc-filling-level-bg-50;
+    }
+
+    &.bqc-badge-75 {
+        // 75 - 99
+        background-color: $bqc-filling-level-bg-75;
+        color: $bqc-filling-level-color2;
+    }
+
+    &.bqc-badge-100 {
+        // 100
+        background-color: $bqc-filling-level-bg-100;
+    }
+}
+
+/**
+ * Für den Darkmode werden nur die Farben umgestaltet.
+ * die Farbwerte stammen aus _variables-dark.scss.
+ *
+ * Da die Einstellungen zweimal vorgenommen werden, läuft das hier
+ * (abgekupfert aus anderen Addons) mit mixins
+ */
+@mixin _dark-bqc-addon {
+    .bqc-addon {
+        .bqc-table {
+            tr {
+                .tasklink svg {
+                    color: $bqc-d-checkbox-color;
+                }
+
+                .tasklink:hover svg {
+                    color: $bqc-d-checkbox-color2;
+                }
+
+                &.bqc-completed {
+                    .bqc-tasktitle:not(:hover) {
+                        color: $bqc-d-checkbox-color2;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@mixin _dark-bqc-badge {
+    .bqc-badge {
+
+        color: $bqc-d-filling-level-color;
+
+        &.bqc-badge-0 {
+            background-color: $bqc-d-filling-level-bg-0;
+        }
+
+        &.bqc-badge-25 {
+            background-color: $bqc-d-filling-level-bg-25;
+        }
+
+        &.bqc-badge-50 {
+            background-color: $bqc-d-filling-level-bg-50;
+        }
+
+        &.bqc-badge-75 {
+            background-color: $bqc-d-filling-level-bg-75;
+            color: $bqc-d-filling-level-color2;
+        }
+
+        &.bqc-badge-100 {
+            background-color: $bqc-d-filling-level-bg-100;
+        }
+    }
+}
+
+body.rex-theme-dark {
+    @include _dark-bqc-addon;
+    @include _dark-bqc-badge;
+}
+
+@media (prefers-color-scheme: dark) {
+    body:not(.rex-theme-light) {
+        @include _dark-bqc-addon;
+        @include _dark-bqc-badge;
+    }
 }
