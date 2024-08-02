@@ -18,9 +18,9 @@ class BaseQualityCheck extends rex_yform_manager_dataset
     {
         $yform = parent::getForm();
 
-        if(!rex_addon::get('cke5')->isAvailable()) {
-            foreach( $yform->objparams['form_elements'] as $k=>&$e) {
-                if($e[0] === 'textarea' && str_contains($e[5],'cke5-editor')) {
+        if (!rex_addon::get('cke5')->isAvailable()) {
+            foreach ($yform->objparams['form_elements'] as $k => &$e) {
+                if ('textarea' === $e[0] && str_contains($e[5], 'cke5-editor')) {
                     $e[5] = '';
                 }
             }

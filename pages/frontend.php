@@ -1,20 +1,14 @@
 <?php
 
-use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
+use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckGroup;
 
 $group = 1;
 $page = rex_be_controller::getCurrentPageObject();
 $pagetitle = $page->getTitle();
 
-$tasklist = BaseQualityCheck::query()
-    ->where('status', 1, '=')
-    ->where('group', $group, '=')
-    ->orderBy('prio', 'ASC')
-    ->find();
-
 $page_fragment = new rex_fragment();
 $page_fragment->setVar('group', $group, false);
-$page_fragment->setVar('tasklist', $tasklist);
+$page_fragment->setVar('tasklist', BaseQualityCheckGroup::fetchByGroup($group));
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $pagetitle, false);
