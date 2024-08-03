@@ -47,7 +47,7 @@ class BaseQualityCheckGroup extends rex_yform_manager_dataset
      */
     public function taskList(bool $activeOnly = true): rex_yform_manager_collection
     {
-        $query = self::query();
+        $query = BaseQualityCheck::query();
         $alias = $query->getTableAlias();
 
         $query
