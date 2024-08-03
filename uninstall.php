@@ -18,12 +18,6 @@ try {
         \rex_sql_table::get( $table )->drop();
     }
 
-    // Cronjobs löschen
-    $sql = \rex_sql::factory();
-    $sql->setTable( \rex::getTable( 'cronjob') );
-    $sql->setWhere( 'type=:type', [':type'=>'FriendsOfRedaxo\\Geolocation\\Cronjob'] );
-    $sql->delete();
-
 } catch (\RuntimeException $e) {
 
     $this->setProperty('installmsg', $e->getMessage() );
