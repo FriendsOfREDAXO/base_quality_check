@@ -3,6 +3,12 @@ Base Quality Check - Changelog
 ================================================================================
 
 
+## Version 1.7.0. 04.08.2024
+
+Source-Code in der Detailbeschreibung einzelner Checks wird nun sprachspezifisch farbig
+dargestellt (Syntaxhervorhebung). Dazu werden beim ersten Update auf eine Version 1.7+
+die jeweiligen Teste im Feld "source" aktualisiert.
+
 ## Version 1.6.0. 22.07.2024
 
 add installer action, publish to redaxo.org. Danke an [skerbis](https://github.com/skerbis)

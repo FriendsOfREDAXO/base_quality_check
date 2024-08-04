@@ -125,5 +125,9 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
 
 /**
  * JS für die BE-Seite des Addons einbinden
+ * - allgemeins Zeug für die Addon-Seite
+ * - Code-Blöcke farbig anzeigen mit PrismJS
  */
+rex_view::addJsFile($addon->getAssetsUrl('prism.min.js'));
+rex_view::addCssFile($addon->getAssetsUrl('prism.min.css'));
 rex_view::addJsFile($addon->getAssetsUrl('bqc.js'));

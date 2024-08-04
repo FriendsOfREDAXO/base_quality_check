@@ -13,6 +13,15 @@ $group = $this->getVar('group', 0);
 /** @var rex_yform_manager_collection<BaseQualityCheck> $tasklist */
 $tasklist = $this->getVar('tasklist', []);
 
+/**
+ * Markdown-Formatierer vorbereiten.
+ */
+$markdown = rex_markdown::factory();
+$markdownOptions = [
+    rex_markdown::SOFT_LINE_BREAKS => false,
+    rex_markdown::HIGHLIGHT_PHP => false,
+];
+
 $currentSubGroup = '';
 $rows = [];
 foreach ($tasklist as $task) {
@@ -69,7 +78,7 @@ foreach ($tasklist as $task) {
 
     $content = $task->getSource();
     if ('' < $content) {
-        $content = rex_string::highlight($content);
+        $content = $markdown->parse($content, $markdownOptions);
         $infoset[] = '<header class="panel-heading">Code</header>
             <div class="panel-body">' . $content . '</div>';
         }
