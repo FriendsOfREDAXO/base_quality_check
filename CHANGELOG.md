@@ -3,11 +3,11 @@ Base Quality Check - Changelog
 ================================================================================
 
 
-## Version 1.7.0. 04.08.2024
+## Version 1.7.0-beta1 04.08.2024
 
 Source-Code in der Detailbeschreibung einzelner Checks wird nun sprachspezifisch farbig
-dargestellt (Syntaxhervorhebung). Dazu werden beim ersten Update auf eine Version 1.7+
-die jeweiligen Teste im Feld "source" aktualisiert.
+dargestellt (Syntax-Hervorhebung). Dazu werden beim ersten Update auf eine Version 1.7+
+die jeweiligen Tests im Feld "source" aktualisiert (#26).
 
 ## Version 1.6.0. 22.07.2024
 

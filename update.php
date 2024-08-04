@@ -26,7 +26,7 @@ if (rex_version::compare($this->getVersion(), '1.7', '>=')) {
 /**
  * Variablen vorbelegen
  */
-$table = rex::getTable('rex_base_quality_check');
+$table = rex::getTable('base_quality_check');
 $sourceField = 'source';
 $jsonFilename = rex_path::addon('base_quality_check','install/upgrade-01-07-00.json');
 
@@ -39,20 +39,19 @@ $datapool = json_decode($pool,true);
 
 $sql = rex_sql::factory();
 foreach( $datapool as $item) {
-    $sql->setTable('rex_base_quality_check');
-    $sql->setValue('source',$item[$sourceField]);
+    $sql->setTable($table);
+    $sql->setValue($sourceField,$item[$sourceField]);
     $sql->setWhere('id = :id',[':id'=>$item['id']]);
     $sql->update();
 }
 
 /**
  * In der YForm-Konfiguration das Feld "attribut" des Source-Feldes
- * aus '' setzen
+ * auf '' setzen und einen Eingabehinweis ("notice") hinzufügen
  */
 \rex_yform_manager_table_api::setTableField(
-    'rex_base_quality_check',
+    $table,
     [
-        'table_name' => $table,
         'type_id' => 'value',
         'name' => $sourceField,
         'attributes' => '',
