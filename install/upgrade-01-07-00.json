@@ -1,0 +1,46 @@
+[
+    {
+        "id": 13,
+        "source": "### PHP-Schreibweise\r\n\r\n```php\r\n$yform->setValueField('spam_protection', array(\"honeypot\",\"Bitte nicht ausf\u00fcllen.\",\"Ihre Anfrage wurde als Spam erkannt und gel\u00f6scht. Bitte versuchen Sie es in einigen Minuten erneut oder wenden Sie sich pers\u00f6nlich an uns.\", 0));\r\n```\r\n\r\n### Pipe-Schreibweise\r\n\r\n```\r\nspam_protection|honeypot|Bitte nicht ausf\u00fcllen|Ihre Anfrage wurde als Spam erkannt und gel\u00f6scht. Bitte versuchen Sie es in einigen Minuten erneut oder wenden Sie sich pers\u00f6nlich an uns.|0<\/code><\/pre>\r\n```"
+    },
+    {
+        "id": 25,
+        "source": "### config.yml\r\n\r\n```yml\r\nlive_mode: true\/false\r\n```\r\n\r\n### boot.php: Alternativ ist auch eine \u00c4nderung des Modus auch per PHP m\u00f6glich.\r\n\r\n```php\r\nif (rex::isBackend()) {\r\n    rex_extension::register('PACKAGES_INCLUDED', static function (rex_extension_point $ep) {\r\n        rex::setProperty('live_mode', true);\r\n    }, rex_extension::EARLY);  \r\n}\r\n```"
+    },
+    {
+        "id": 26,
+        "source": "```html\r\n<!DOCTYPE html>\r\n<html lang=\"de\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Titel der Seite<\/title>\r\n<\/head>\r\n<body>\r\n    <h1>Willkommen auf meiner Webseite<\/h1>\r\n    <p>Dies ist ein Beispiel f\u00fcr eine Webseite auf Deutsch.<\/p>\r\n<\/body>\r\n<\/html>\r\n```"
+    },
+    {
+        "id": 27,
+        "source": "```html\r\n<html lang=\"de\">\r\n```"
+    },
+    {
+        "id": 28,
+        "source": "```html\r\n<title>Professionelle Webentwicklung in Deutschland | MeineWebseite<\/title>\r\n```"
+    },
+    {
+        "id": 30,
+        "source": "Sitemap: https:\/\/www.deinedomain.de\/sitemap.xml\r\n\r\n```\r\nUser-agent: *\r\nDisallow: \/assets\/\r\nDisallow: \/redaxo\/\r\nDisallow: \/theme\/\r\n```\r\n"
+    },
+    {
+        "id": 33,
+        "source": "```\r\n\/* TEAM *\/\r\nOliver Kreischer | getaweb GmbH\r\nRolle: Entwickler\r\nE-Mail: kreischer@getaweb.de\r\nWeb: https:getaweb.de\r\n\r\n\/* DANKSAGUNG *\/\r\nBesonderer Dank geht an die REDAXO Community.\r\n\r\n\/* TECHNOLOGIE *\/\r\nErstellt REDAXO (https:\/\/redaxo.org)\r\n```"
+    },
+    {
+        "id": 37,
+        "source": "```html\r\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n```"
+    },
+    {
+        "id": 38,
+        "source": "```html\r\n<meta name=\"description\" content=\"Dies ist eine kurze Zusammenfassung des Inhalts dieser Webseite.\">\r\n```"
+    },
+    {
+        "id": 42,
+        "source": "```html\r\n<link rel=\"canonical\" href=\"https:\/\/www.beispielseite.de\/bevorzugte-seite\">\r\n```"
+    },
+    {
+        "id": 43,
+        "source": "### Beispiel 1: OpenGraph\r\n\r\n```html\r\n<!-- OpenGraph Meta-Tags -->\r\n<meta property=\"og:title\" content=\"Titel der Seite\">\r\n<meta property=\"og:type\" content=\"website\">\r\n<meta property=\"og:url\" content=\"https:\/\/www.beispielseite.de\/\">\r\n<meta property=\"og:image\" content=\"https:\/\/www.beispielseite.de\/bild.jpg\">\r\n<meta property=\"og:description\" content=\"Beschreibung der Seite\">\r\n<meta property=\"og:site_name\" content=\"Beispielseite\">\r\n<meta property=\"og:locale\" content=\"de_DE\">\r\n```\r\n\r\n### Beispiel 2: Twitter\r\n\r\n```html\r\n<!-- Twitter Card Meta-Tags -->\r\n<meta name=\"twitter:card\" content=\"summary_large_image\">\r\n<meta name=\"twitter:site\" content=\"@deinTwitterHandle\">\r\n<meta name=\"twitter:title\" content=\"Titel der Seite\">\r\n<meta name=\"twitter:description\" content=\"Beschreibung der Seite\">\r\n<meta name=\"twitter:image\" content=\"https:\/\/www.beispielseite.de\/bild.jpg\">\r\n```"
+    }
+]

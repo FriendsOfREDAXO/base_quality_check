@@ -3,6 +3,15 @@ Base Quality Check - Changelog
 ================================================================================
 
 
+## Version 1.7.0 06.08.2024
+
+Source-Code in der Detailbeschreibung einzelner Checks wird nun sprachspezifisch farbig
+dargestellt (Syntax-Hervorhebung). Dazu werden beim ersten Update auf eine Version 1.7+
+die jeweiligen Tests im Feld "source" aktualisiert (#26).
+
+Die Bindung der Textfelder im Formular zur Tabelle rex_base_quality_check an den
+CKE5-Editor wird automatisch aufgehoben, wenn das CKE5-Addon nicht verfügbar ist. (#21)
+
 ## Version 1.6.0. 22.07.2024
 
 add installer action, publish to redaxo.org. Danke an [skerbis](https://github.com/skerbis)

@@ -131,8 +131,8 @@
                 "not_required": "",
                 "default": "",
                 "no_db": "0",
-                "attributes": "{\"class\":\"cke5-editor\",\"data-profile\":\"bqc\",\"data-lang\":\"de\"}",
-                "notice": ""
+                "attributes": "",
+                "notice": "Bitte Markdown-Code eingeben; Code-Blöcke z.B. mit «```php» beginnen (oder html, js, yml, ...)"
             },
             {
                 "table_name": "rex_base_quality_check",

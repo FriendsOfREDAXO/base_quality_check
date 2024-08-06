@@ -227,6 +227,14 @@ $bqc-d-checkbox-color2: $alert-success-bg;
                         color: $bqc-d-checkbox-color2;
                     }
                 }
+
+                /**
+                 * Löst ein CSS-Problem, dass eigentlich keines sein sollte!
+                 * Kommt aus dem JS-Code-Formatierer PrismJS i.V.M REDAXO-DarkMode
+                 */
+                code {
+                    text-shadow: none;
+                }
             }
         }
     }
