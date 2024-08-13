@@ -115,7 +115,7 @@
                 "not_required": "",
                 "default": "",
                 "no_db": "0",
-                "attributes": "{\"class\":\"cke5-editor\",\"data-profile\":\"bqc\",\"data-lang\":\"de\"}",
+                "attributes": "{\"class\":\"form-control cke5-editor\",\"data-profile\":\"bqc\",\"data-lang\":\"de\"}",
                 "notice": ""
             },
             {
@@ -147,7 +147,7 @@
                 "not_required": "",
                 "default": "",
                 "no_db": "0",
-                "attributes": "{\"class\":\"cke5-editor\",\"data-profile\":\"bqc\",\"data-lang\":\"de\"}",
+                "attributes": "{\"class\":\"form-control cke5-editor\",\"data-profile\":\"bqc\",\"data-lang\":\"de\"}",
                 "notice": ""
             },
             {
