@@ -3,10 +3,14 @@ Base Quality Check - Changelog
 ================================================================================
 
 
-## Version 1.8.0 06.08.2024
+## Version 1.8.0 14.08.2024
 
 Datentypen in der Datenbank optimert (`int` statt `text`); Versionen vor 1.8.0 werden
 automatisch aktualisiert.
+
+Fehlende Klasse `form-control` im YForm-Formular ergänzt.
+
+Umstellung auf rex_loader-API und Redaxo-Mindestversion 5.17.0 (passend zu YForm)
 
 ## Version 1.7.0 06.08.2024
 
