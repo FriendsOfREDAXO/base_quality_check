@@ -8,6 +8,8 @@ Base Quality Check - Changelog
 Datentypen in der Datenbank optimert (`int` statt `text`); Versionen vor 1.8.0 werden
 automatisch aktualisiert.
 
+Fehlende Klasse `form-control` im YForm-Formular ergänzt.
+
 ## Version 1.7.0 06.08.2024
 
 Source-Code in der Detailbeschreibung einzelner Checks wird nun sprachspezifisch farbig
