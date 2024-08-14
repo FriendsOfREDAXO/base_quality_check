@@ -27,7 +27,7 @@ page:
         itemclass: pull-right        
 
 requires:
-  redaxo: '^5.15'
+  redaxo: '^5.17.0'
   yform: '^4.2.1'
   yform/manager: '^4.2.1'
 
