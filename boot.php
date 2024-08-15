@@ -10,7 +10,7 @@ $addon = rex_addon::get('base_quality_check');
 /**
  * Alles nur sinnvoll im BE. Wenn FE direkt abbrechen.
  */
-if (rex::isFrontend()) {
+if (rex::isFrontend() or rex::isLiveMode()) {
     return;
 }
 
