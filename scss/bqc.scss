@@ -23,7 +23,7 @@ $bqc-infobox-top-margin: $padding-large-vertical;
 
 $bqc-badge-padding: $padding-xs-vertical $padding-xs-horizontal;
 $bqc-badge-fontsize: 70%; // ca 10px
-$bqc-badge-radius: $border-radius-base;
+$bqc-badge-radius: 3px;
 $bqc-badge-margin: 2px 0 0 12px;
 
 $bqc-checkbox-height: $input-height-xs;
@@ -172,9 +172,14 @@ $bqc-d-checkbox-color2: $alert-success-bg;
     font-weight: bold;
     font-size: $bqc-badge-fontsize;
     padding: $bqc-badge-padding;
-    margin: $bqc-badge-margin;
+    //margin: $bqc-badge-margin;
     border-radius: $bqc-badge-radius;
     color: $bqc-filling-level-color;
+    margin: 0;
+
+    .bqc-addon .nav-tabs & {
+        margin: $bqc-badge-margin;
+    }
 
     &.bqc-badge-0 {
         // 0 - 24
