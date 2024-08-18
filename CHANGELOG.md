@@ -4,7 +4,8 @@ Base Quality Check - Changelog
 
 ## Version 1.8.1 xx.xx.2024 (WiP)
 
-- Optimiert die Darstellung der Füllstandsanzeige (siehe #32)
+- Optimiert die Darstellung der Füllstandsanzeige (siehe [#32](https://github.com/FriendsOfREDAXO/base_quality_check/issues/32))
+- LiveMode-Unterstützung (siehe [#31](https://github.com/FriendsOfREDAXO/base_quality_check/issues/31))
 ...
 
 ## Version 1.8.0 14.08.2024
