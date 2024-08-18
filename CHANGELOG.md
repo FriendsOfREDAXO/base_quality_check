@@ -4,7 +4,7 @@ Base Quality Check - Changelog
 
 ## Version 1.8.1 xx.xx.2024 (WiP)
 
-- Optimiert die Darstellung der Füllstandsanzeige (siehe #34)
+- Optimiert die Darstellung der Füllstandsanzeige (siehe #32)
 ...
 
 ## Version 1.8.0 14.08.2024
