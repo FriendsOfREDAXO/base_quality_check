@@ -14,6 +14,10 @@ if (rex::isFrontend()) {
     return;
 }
 
+if (true === rex::getProperty('live_mode', false)) {
+//    return;
+}
+
 /**
  * CSS benötigen wir so oder so.
  *
@@ -44,7 +48,7 @@ rex_view::addCssFile($addon->getAssetsUrl('bqc.css'));
 /**
  * automatisch erzeugten Titel für die eigene Navigationsgruppe "base_addon"
  * entfernen durch "Bereitstellen" eines leeren Textes. CSS sorgt dann für die
- * Optik. (klappt nur so, nicht per .lang-Datei)
+ * Optik. (klappt nur so, nicht per .lang-Datei).
  *
  * STAN: RexStan meckert hier an, dass der Text eigentlich nicht leer sein darf.
  * @phpstan-ignore-next-line
@@ -73,6 +77,15 @@ rex_yform_manager_dataset::setModelClass(
  * 2) Menüpunkt im Hauptmenu erweitern und stylen (Füllstandsanzeige).
  */
 rex_extension::register('PAGES_PREPARED', static function ($ep) {
+
+    /**
+     * Nur wenn es die Seite gibt. Im LiveMode fehlt sie sie z.B.
+     */
+    $page = rex_be_controller::getPageObject('base_quality_check');
+    if( null === $page) {
+        return;
+    }
+
     /**
      * Ggf. in der URL stehende Parameter auswerten und verarbeiten
      * func=checktask bzw. func=unchecktask   "check" auf 1 oder 0 setzen
@@ -105,7 +118,6 @@ rex_extension::register('PAGES_PREPARED', static function ($ep) {
     $checked = $status[1] ?? 0;
     $quota = round($checked / $sum * 100, 0);
 
-    $page = rex_be_controller::getPageObject('base_quality_check');
     $name = sprintf(
         '%s <span class="bqc-badge %s">%d %%</span>',
         $page->getTitle(),
@@ -125,7 +137,7 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
 
 /**
  * JS für die BE-Seite des Addons einbinden
- * - Code-Blöcke farbig anzeigen mit PrismJS
+ * - Code-Blöcke farbig anzeigen mit PrismJS.
  */
 rex_view::addJsFile($addon->getAssetsUrl('prism.min.js'));
 rex_view::addCssFile($addon->getAssetsUrl('prism.min.css'));
