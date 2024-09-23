@@ -2,6 +2,11 @@
 Base Quality Check - Changelog
 ================================================================================
 
+
+## Version 1.8.2 23.09.2024
+
+- Reload der Seite per Javascript (siehe [#33 (https://github.com/FriendsOfREDAXO/base_quality_check/issues/33))
+
 ## Version 1.8.1 xx.xx.2024 (WiP)
 
 - Optimiert die Darstellung der Füllstandsanzeige (siehe [#32](https://github.com/FriendsOfREDAXO/base_quality_check/issues/32))

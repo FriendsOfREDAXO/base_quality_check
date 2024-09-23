@@ -141,3 +141,5 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
  */
 rex_view::addJsFile($addon->getAssetsUrl('prism.min.js'));
 rex_view::addCssFile($addon->getAssetsUrl('prism.min.css'));
+
+rex_view::addJsFile($addon->getAssetsUrl('base_quality_check.js'));
