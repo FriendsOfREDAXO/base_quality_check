@@ -3,58 +3,41 @@
 namespace FriendsOfRedaxo\BaseQualityCheck;
 
 use rex_addon;
-use rex_yform;
 use rex_yform_manager_dataset;
 
 class BaseQualityCheck extends rex_yform_manager_dataset
 {
-    /**
-     * BaseQualityCheck unterstellt (ohne dies in der package.yml abzuprüfen)
-     * dass das Addon CKEditor-5 installiert ist. Wenn nicht, erfolgt das Fallback
-     * auf textarea-Standard.
-     * Dazu werden die Feldattribute ($e[5] beim textarea-Feld) entfernt.
-     */
-    public function getForm(): rex_yform
-    {
-        $yform = parent::getForm();
-
-        if (!rex_addon::get('cke5')->isAvailable()) {
-            foreach ($yform->objparams['form_elements'] as $k => &$e) {
-                if ('textarea' === $e[0] && str_contains($e[5], 'cke5-editor')) {
-                    $e[5] = '';
-                }
-            }
-        }
-
-        return $yform;
-    }
-
     /* Status */
     /** @api */
-    public function getCheck(bool $asBool = false): mixed
+    public function getCheck(bool $asBool = false): int|bool
     {
         if ($asBool) {
             return (bool) $this->getValue('check');
         }
-        return $this->getValue('check');
+        return (int) $this->getValue('check');
     }
 
     /** @api */
-    public function setCheck(int $value = 1): self
+    public function setCheck(int|bool $value = true): self
     {
-        $this->setValue('check', $value);
+        $this->setValue('check', (int) $value);
         return $this;
+    }
+
+    public function isCompleted(): bool
+    {
+        return (bool) $this->getValue('check');
     }
 
     /* Titel */
     /** @api */
-    public function getTitle(): ?string
+    public function getTitle(): string
     {
-        return $this->getValue('title');
+        return (string) $this->getValue('title');
     }
 
     /** @api */
-    public function setTitle(mixed $value): self
+    public function setTitle(?string $value): self
     {
         $this->setValue('title', $value);
         return $this;
@@ -62,13 +45,13 @@ class BaseQualityCheck extends rex_yform_manager_dataset
 
     /* Titel Ergänzung */
     /** @api */
-    public function getSecondTitle(): ?string
+    public function getSecondTitle(): string
     {
-        return $this->getValue('second_title');
+        return (string) $this->getValue('second_title');
     }
 
     /** @api */
-    public function setSecondTitle(mixed $value): self
+    public function setSecondTitle(?string $value): self
     {
         $this->setValue('second_title', $value);
         return $this;
@@ -90,16 +73,16 @@ class BaseQualityCheck extends rex_yform_manager_dataset
 
     /* Beschreibung */
     /** @api */
-    public function getDescription(bool $asPlaintext = false): ?string
+    public function getDescription(bool $asPlaintext = false): string
     {
         if ($asPlaintext) {
-            return strip_tags($this->getValue('description'));
+            return strip_tags((string) $this->getValue('description'));
         }
-        return $this->getValue('description');
+        return (string) $this->getValue('description');
     }
 
     /** @api */
-    public function setDescription(mixed $value): self
+    public function setDescription(?string $value): self
     {
         $this->setValue('description', $value);
         return $this;
@@ -107,16 +90,16 @@ class BaseQualityCheck extends rex_yform_manager_dataset
 
     /* Quellcode */
     /** @api */
-    public function getSource(bool $asPlaintext = false): ?string
+    public function getSource(bool $asPlaintext = false): string
     {
         if ($asPlaintext) {
-            return strip_tags($this->getValue('source'));
+            return strip_tags((string) $this->getValue('source'));
         }
-        return $this->getValue('source');
+        return (string) $this->getValue('source');
     }
 
     /** @api */
-    public function setSource(mixed $value): self
+    public function setSource(?string $value): self
     {
         $this->setValue('source', $value);
         return $this;
@@ -124,16 +107,16 @@ class BaseQualityCheck extends rex_yform_manager_dataset
 
     /* Links */
     /** @api */
-    public function getLinks(bool $asPlaintext = false): ?string
+    public function getLinks(bool $asPlaintext = false): string
     {
         if ($asPlaintext) {
-            return strip_tags($this->getValue('links'));
+            return strip_tags((string) $this->getValue('links'));
         }
-        return $this->getValue('links');
+        return (string) $this->getValue('links');
     }
 
     /** @api */
-    public function setLinks(mixed $value): self
+    public function setLinks(?string $value): self
     {
         $this->setValue('links', $value);
         return $this;
@@ -141,23 +124,83 @@ class BaseQualityCheck extends rex_yform_manager_dataset
 
     /* Status */
     /** @api */
-    public function getStatus(): ?string
+    public function getStatus(): int
     {
-        return $this->getValue('status');
+        return (int) $this->getValue('status');
     }
 
     /** @api */
-    public function setStatus(mixed $value): self
+    public function setStatus(int|bool $value): self
     {
-        $this->setValue('status', $value);
+        $this->setValue('status', (int) $value);
         return $this;
     }
 
-    // Beispiel einer getPrio Methode
+    public function isActive(): bool
+    {
+        return (bool) $this->getValue('status');
+    }
+
     /** @api */
     public function getPrio(): int
     {
-        // Angenommen, es gibt eine Eigenschaft $prio, die die Priorität speichert
-        return $this->prio;
+        return (int) $this->getValue('prio');
+    }
+
+    public function getComment(): string
+    {
+        return (string) $this->getValue('comment');
+    }
+
+    public function setComment(?string $value): self
+    {
+        $this->setValue('comment', $value);
+        return $this;
+    }
+
+    public function getRequiredAddons(): string
+    {
+        return trim((string) $this->getValue('required_addons'));
+    }
+
+    public function getCheckedBy(): string
+    {
+        return (string) $this->getValue('checked_by');
+    }
+
+    public function getCheckedAt(): string
+    {
+        return (string) $this->getValue('checked_at');
+    }
+
+    public function setCheckedBy(?string $user, ?string $date): self
+    {
+        $this->setValue('checked_by', $user);
+        $this->setValue('checked_at', $date);
+        return $this;
+    }
+
+    public function appliesToInstallation(): bool
+    {
+        $condition = $this->getRequiredAddons();
+        if ('' === $condition) {
+            return true;
+        }
+
+        foreach (explode(',', $condition) as $requiredGroup) {
+            $matches = false;
+            foreach (explode('|', $requiredGroup) as $addonName) {
+                $addonName = trim($addonName);
+                if ('' !== $addonName && rex_addon::exists($addonName) && rex_addon::get($addonName)->isInstalled()) {
+                    $matches = true;
+                    break;
+                }
+            }
+            if (!$matches) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

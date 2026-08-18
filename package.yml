@@ -1,39 +1,49 @@
 package: base_quality_check
-version: 1.8.2
+version: '2.0.0-beta1'
 author: 'Friends Of REDAXO'
 supportpage: https://github.com/FriendsOfREDAXO/base_quality_check
-compile: false
 
 page:
-  title: Base Quality Check
-  icon: rex-icon fa-check check
-  perm: admin
-  live_mode: false
-  block: base_addon  
-  subpages:
-    frontend:   
-      title: Frontend
-    backend:   
-      title: Backend   
-    live:   
-      title: Live          
-    readme:
-        title: Info
-        subPath: README.md
-        itemclass: pull-right
-    changelog:
-        title: Changelog
-        subPath: CHANGELOG.md
-        itemclass: pull-right        
+    title: translate:base_quality_check_title
+    icon: rex-icon fa-check
+    perm: admin
+    live_mode: false
+    block: base_addon
+    subpages:
+        report:
+            title: translate:base_quality_check_report
+        info:
+            title: translate:base_quality_check_info
+            itemClass: pull-right
+            subpages:
+                help:
+                    title: translate:base_quality_check_help
+                    subPath: README.md
+                changelog:
+                    title: translate:base_quality_check_changelog
+                    subPath: CHANGELOG.md
+                license:
+                    title: translate:base_quality_check_license
+                    subPath: LICENSE.md
+        custom_checks:
+            title: translate:base_quality_check_custom_checks
+            itemClass: pull-right
 
 requires:
-  redaxo: '^5.17.0'
-  yform: '^4.2.1'
-  yform/manager: '^4.2.1'
+    php: '>=8.3'
+    redaxo: '>=5.20.0'
+    addons:
+        yform: '>=5.0.1'
+
+suggests:
+    addons:
+        yrewrite: '*'
 
 installer_ignore:
-    - .git
-    - preview
-    - .github
-    - .gitignore
-    - .gitattributes
+    - '.git'
+    - '.github'
+    - '.gitignore'
+    - '.gitattributes'
+    - '.DS_Store'
+    - '.idea'
+    - '.vscode'

@@ -3,65 +3,41 @@
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckGroup;
 use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheckSubGroup;
+use FriendsOfRedaxo\BaseQualityCheck\AuditLog;
 use FriendsOfRedaxo\BaseQualityCheck\BqcTools;
+use FriendsOfRedaxo\BaseQualityCheck\ChecklistService;
 
 $addon = rex_addon::get('base_quality_check');
 
-/**
- * Alles nur sinnvoll im BE. Wenn FE direkt abbrechen.
- */
 if (rex::isFrontend()) {
     return;
 }
 
-if (true === rex::getProperty('live_mode', false)) {
-//    return;
-}
+rex_view::addCssFile($addon->getAssetsUrl('bqc-v2.css'));
 
-/**
- * CSS benötigen wir so oder so.
- *
- * Kleine Vorarbeit on Demand: SCSS neu kompilieren
- * Auslöser ist die Property 'compile' auf «true».
- */
-rex_extension::register('PACKAGES_INCLUDED', static function () {
-    $addon = rex_addon::get('base_quality_check');
-    if (true === $addon->getProperty('compile', false)) {
-        $compiler = new rex_scss_compiler();
-        // $compiler->setFormatter(\ScssPhp\ScssPhp\Formatter\Expanded::class);
-        $scss_files = rex_extension::registerPoint(new rex_extension_point('BE_STYLE_SCSS_FILES', [
-            rex_path::plugin('be_style', 'redaxo', 'scss/_variables.scss'),
-            rex_path::plugin('be_style', 'redaxo', 'scss/_variables-dark.scss'),
-            rex_path::addon('be_style', 'vendor/font-awesome/scss/_variables.scss'),
-            $addon->getPath('scss/bqc.scss'),
-        ]));
-        $compiler->setScssFile($scss_files);
-        $compiler->setCssFile($addon->getPath('assets/bqc.css'));
-        $compiler->compile();
-        rex_file::copy($addon->getPath('assets/bqc.css'), $addon->getAssetsPath('bqc.css'));
-        $addon->removeProperty('compile');
-    }
-});
-
-rex_view::addCssFile($addon->getAssetsUrl('bqc.css'));
-
-/**
- * automatisch erzeugten Titel für die eigene Navigationsgruppe "base_addon"
- * entfernen durch "Bereitstellen" eines leeren Textes. CSS sorgt dann für die
- * Optik. (klappt nur so, nicht per .lang-Datei).
- *
- * STAN: RexStan meckert hier an, dass der Text eigentlich nicht leer sein darf.
- * @phpstan-ignore-next-line
- */
-rex_i18n::addMsg('navigation_base_addon', '');
-
-/**
- * ModelClasses zuweisen.
- */
 rex_yform_manager_dataset::setModelClass(
     'rex_base_quality_check',
     BaseQualityCheck::class,
 );
+
+// Auch Änderungen über den YForm Table Manager nachvollziehbar halten.
+if (rex::getUser()?->isAdmin() && str_starts_with(rex_be_controller::getCurrentPage(), 'yform/manager')) {
+    foreach (['YFORM_DATA_ADDED' => 'created', 'YFORM_DATA_UPDATED' => 'updated', 'YFORM_DATA_DELETED' => 'deleted'] as $extensionPoint => $action) {
+        rex_extension::register($extensionPoint, static function (rex_extension_point $ep) use ($action): void {
+            $table = (string) $ep->getParam('table');
+            $data = $ep->getParam('data');
+            $user = (string) rex::requireUser()->getLogin();
+
+            if (rex::getTable('base_quality_check') === $table && $data instanceof BaseQualityCheck) {
+                AuditLog::record($data->getId(), $action, $user, $data->getTitle());
+            } elseif (rex::getTable('base_quality_check_group') === $table && $data instanceof BaseQualityCheckGroup) {
+                AuditLog::record(0, 'group', $user, rex_i18n::msg('base_quality_check_field_group') . ': ' . $data->getGroup());
+            } elseif (rex::getTable('base_quality_check_sub_group') === $table && $data instanceof BaseQualityCheckSubGroup) {
+                AuditLog::record(0, 'category', $user, rex_i18n::msg('base_quality_check_subgroup') . ': ' . $data->getSubgroup());
+            }
+        });
+    }
+}
 rex_yform_manager_dataset::setModelClass(
     'rex_base_quality_check_group',
     BaseQualityCheckGroup::class,
@@ -71,58 +47,33 @@ rex_yform_manager_dataset::setModelClass(
     BaseQualityCheckSubGroup::class,
 );
 
-/**
- * Erst nachdem alle Packages geladen sind können diese beiden Aktionen ablaufen
- * 1) Aus dem Aufruf der Seite ggf. einen Check-Haken setzen/entfernen
- * 2) Menüpunkt im Hauptmenu erweitern und stylen (Füllstandsanzeige).
- */
-rex_extension::register('PAGES_PREPARED', static function ($ep) {
-
-    /**
-     * Nur wenn es die Seite gibt. Im LiveMode fehlt sie sie z.B.
-     */
+rex_extension::register('PAGES_PREPARED', static function (): void {
     $page = rex_be_controller::getPageObject('base_quality_check');
-    if( null === $page) {
+    if (null === $page) {
         return;
     }
 
-    /**
-     * Ggf. in der URL stehende Parameter auswerten und verarbeiten
-     * func=checktask bzw. func=unchecktask   "check" auf 1 oder 0 setzen
-     * id=satznummer                          Satznummer in BaseQualityCheck.
-     */
-    $func = rex_request::request('func', 'string', '');
-    if ('checktask' === $func || 'unchecktask' === $func) {
-        $id = rex_request::request('id', 'int', 0);
-        $data = BaseQualityCheck::get($id);
-        if (null !== $data) {
-            $data->setCheck('checktask' === $func ? 1 : 0);
-            $data->save();
+    $staticPages = $page->getSubpages();
+    $subpages = [];
+    foreach (ChecklistService::groups() as $group) {
+        $key = ChecklistService::pageKey($group->getId());
+        $subpages[] = (new rex_be_page($key, rex_escape(ChecklistService::navigationTitle($group->getGroup()))))
+            ->setSubPath(rex_path::addon('base_quality_check', 'pages/checklist.php'));
+    }
+    foreach (['report', 'info', 'custom_checks'] as $key) {
+        if (isset($staticPages[$key])) {
+            $subpages[] = $staticPages[$key];
         }
     }
+    $page->setSubpages($subpages);
 
-    /**
-     * Füllstand berechnen und den Menütitel um die Anzeige
-     * erweitern.
-     */
-    $status = BaseQualityCheck::query()
-        ->resetSelect()
-        ->select('id')
-        ->select('check')
-        ->selectRaw('COUNT(id)', 'ct')
-        ->where('status', 1)
-        ->groupBy('check')
-        ->find()
-        ->toKeyValue('check', 'ct');
-    $sum = array_sum($status);
-    $checked = $status[1] ?? 0;
-    $quota = round($checked / $sum * 100, 0);
+    $progress = ChecklistService::progress();
 
     $name = sprintf(
         '%s <span class="bqc-badge %s">%d %%</span>',
         $page->getTitle(),
-        BqcTools::quotaClass($quota),
-        $quota,
+        BqcTools::quotaClass($progress['quota']),
+        $progress['quota'],
     );
     $page->setTitle($name);
 });
@@ -135,11 +86,8 @@ if (rex_be_controller::getCurrentPagePart(1) !== $addon->getName()) {
     return;
 }
 
-/**
- * JS für die BE-Seite des Addons einbinden
- * - Code-Blöcke farbig anzeigen mit PrismJS.
- */
-rex_view::addJsFile($addon->getAssetsUrl('prism.min.js'));
-rex_view::addCssFile($addon->getAssetsUrl('prism.min.css'));
+$subpage = rex_be_controller::getCurrentPagePart(2);
 
-rex_view::addJsFile($addon->getAssetsUrl('base_quality_check.js'));
+if ('report' === $subpage) {
+    rex_view::addJsFile($addon->getAssetsUrl('bqc-v2.js'));
+}

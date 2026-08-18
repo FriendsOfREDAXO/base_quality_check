@@ -9,8 +9,9 @@
  * Dann erst wird die Addon-Seite aufgebaut
  */
 
-use FriendsOfRedaxo\BaseQualityCheck\BaseQualityCheck;
 use FriendsOfRedaxo\BaseQualityCheck\BqcTools;
+use FriendsOfRedaxo\BaseQualityCheck\ChecklistExport;
+use FriendsOfRedaxo\BaseQualityCheck\ChecklistService;
 
 /** @var rex_addon $this */
 
@@ -18,30 +19,16 @@ use FriendsOfRedaxo\BaseQualityCheck\BqcTools;
  * Für alle Gruppen die Checks abfragen; gruppiert wird über Gruppe und Check
  * Daraus ein Status-Array erstellen: [gruppe][check] = anzahl.
  */
-$data = BaseQualityCheck::query()
-    ->resetSelect()
-    ->select('id')
-    ->select('group')
-    ->select('check')
-    ->selectRaw('COUNT(id)', 'ct')
-    ->where('status', 1)
-    ->groupBy('group')
-    ->groupBy('check')
-    ->find();
-$status = [];
-foreach ($data as $item) {
-    $status[$item->getValue('group')][$item->getValue('check')] = $item->getValue('ct');
+$export = rex_request::get('bqc_export', 'string');
+if (in_array($export, ['json', 'csv'], true)) {
+    $exportToken = rex_csrf_token::factory('base_quality_check_export');
+    if (!$exportToken->isValid()) {
+        throw new rex_exception(rex_i18n::msg('csrf_token_invalid'));
+    }
+    ChecklistExport::send($export);
 }
 
-/**
- * Group und SubPage sind hart verdrahtet.
- * TODO: das müsste mal aufgelöst und flexibilisiert werden.
- */
-$group2page = [
-    1 => 'frontend',
-    2 => 'backend',
-    3 => 'live',
-];
+$error = ChecklistService::handleAction();
 
 $page = rex_be_controller::getCurrentPageObject();
 $subPages = $page->getParent()->getSubpages();
@@ -52,21 +39,13 @@ $subPages = $page->getParent()->getSubpages();
  * unterschiedliche Farben gesetzt.
  */
 $title4reset = [];
-foreach ($group2page as $groupId => $groupPageName) {
-    // Komisch! Es gibt die Seite nicht.
-    // TODO: ggf. hier eine Developer-Exception werfen
+foreach (ChecklistService::groups() as $group) {
+    $groupId = $group->getId();
+    $groupPageName = ChecklistService::pageKey($groupId);
     if (!isset($subPages[$groupPageName])) {
         continue;
     }
-    // Komisch! das ist eine Gruppe, zu der es keine Einträge gibt?
-    // TODO: ggf. hier eine Developer-Exception werfen
-    if (!isset($status[$groupId])) {
-        continue;
-    }
-
-    $sum = array_sum($status[$groupId]);
-    $checked = $status[$groupId][1] ?? 0;
-    $quota = round($checked / $sum * 100, 0);
+    $progress = ChecklistService::progress($groupId);
 
     $groupPage = $subPages[$groupPageName];
     $name = $groupPage->getTitle();
@@ -74,9 +53,9 @@ foreach ($group2page as $groupId => $groupPageName) {
     $name = sprintf(
         '%s <span class="bqc-badge %s">%d | %d</span>',
         $name,
-        BqcTools::quotaClass($quota),
-        $checked,
-        $sum,
+        BqcTools::quotaClass($progress['quota']),
+        $progress['checked'],
+        $progress['total'],
     );
     $groupPage->setTitle($name);
 }
@@ -90,9 +69,13 @@ foreach ($group2page as $groupId => $groupPageName) {
  * 3) Alles in einen <DIV> mit einer für das CSS identifizieren Klasse einpacken
  */
 echo '<div class="bqc-addon">';
-echo rex_view::title('Base Quality Check');
+$version = rex_escape($this->getVersion());
+echo rex_view::title(rex_i18n::msg('base_quality_check_title') . ' <small class="bqc-version">v' . $version . '</small>');
 foreach ($title4reset as $name => $groupPage) {
     $groupPage->setTitle($name);
+}
+if (null !== $error) {
+    echo rex_view::error($error);
 }
 rex_be_controller::includeCurrentPageSubPath();
 echo '</div>';

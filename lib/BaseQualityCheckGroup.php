@@ -9,13 +9,13 @@ class BaseQualityCheckGroup extends rex_yform_manager_dataset
 {
     /* Gruppe */
     /** @api */
-    public function getGroup(): ?string
+    public function getGroup(): string
     {
-        return $this->getValue('group');
+        return (string) $this->getValue('group');
     }
 
     /** @api */
-    public function setGroup(mixed $value): self
+    public function setGroup(?string $value): self
     {
         $this->setValue('group', $value);
         return $this;
@@ -23,15 +23,15 @@ class BaseQualityCheckGroup extends rex_yform_manager_dataset
 
     /* Status */
     /** @api */
-    public function getStatus(): ?string
+    public function getStatus(): int
     {
-        return $this->getValue('status');
+        return (int) $this->getValue('status');
     }
 
     /** @api */
-    public function setStatus(mixed $value): self
+    public function setStatus(int|bool $value): self
     {
-        $this->setValue('status', $value);
+        $this->setValue('status', (int) $value);
         return $this;
     }
 
@@ -54,13 +54,16 @@ class BaseQualityCheckGroup extends rex_yform_manager_dataset
             ->joinRelation('subgroup', 'sg')
             ->select('sg.subgroup', 'subgroupname')
             ->where($alias . '.group', $this->getId())
+            ->orderBy('sg.prio')
             ->orderBy($alias . '.prio');
 
         if ($activeOnly) {
             $query->where($alias . '.status', 1);
         }
 
-        return $query->find();
+        return $query->find()->filter(
+            static fn (BaseQualityCheck $check): bool => $check->appliesToInstallation(),
+        );
     }
 
     /**

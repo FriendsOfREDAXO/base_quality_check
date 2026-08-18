@@ -1,0 +1,15 @@
+{
+  "checks": [
+    {
+      "title": "Agentur-Freigabe",
+      "second_title": "Wurde die finale Freigabe dokumentiert?",
+      "group": "Livegang & Betrieb",
+      "subgroup": "Sonstiges",
+      "description": "<p>Projektbezogener Prüfpunkt der Agentur.</p>",
+      "source": "",
+      "links": "",
+      "required_addons": "",
+      "status": true
+    }
+  ]
+}

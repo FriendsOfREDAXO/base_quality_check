@@ -106,6 +106,22 @@
                 "table_name": "rex_base_quality_check",
                 "prio": 5,
                 "type_id": "value",
+                "type_name": "text",
+                "db_type": "varchar(191)",
+                "list_hidden": 1,
+                "search": 0,
+                "name": "required_addons",
+                "label": "Benötigte Add-ons",
+                "not_required": "1",
+                "default": "",
+                "no_db": "0",
+                "attributes": "",
+                "notice": "Kommagetrennt = alle erforderlich; Pipe = Alternativen"
+            },
+            {
+                "table_name": "rex_base_quality_check",
+                "prio": 6,
+                "type_id": "value",
                 "type_name": "textarea",
                 "db_type": "text",
                 "list_hidden": 1,
@@ -115,12 +131,12 @@
                 "not_required": "",
                 "default": "",
                 "no_db": "0",
-                "attributes": "{\"class\":\"form-control cke5-editor\",\"data-profile\":\"bqc\",\"data-lang\":\"de\"}",
+                "attributes": "{\"class\":\"form-control\",\"rows\":\"8\"}",
                 "notice": ""
             },
             {
                 "table_name": "rex_base_quality_check",
-                "prio": 6,
+                "prio": 7,
                 "type_id": "value",
                 "type_name": "textarea",
                 "db_type": "text",
@@ -136,7 +152,7 @@
             },
             {
                 "table_name": "rex_base_quality_check",
-                "prio": 7,
+                "prio": 8,
                 "type_id": "value",
                 "type_name": "textarea",
                 "db_type": "text",
@@ -147,12 +163,12 @@
                 "not_required": "",
                 "default": "",
                 "no_db": "0",
-                "attributes": "{\"class\":\"form-control cke5-editor\",\"data-profile\":\"bqc\",\"data-lang\":\"de\"}",
+                "attributes": "{\"class\":\"form-control\",\"rows\":\"8\"}",
                 "notice": ""
             },
             {
                 "table_name": "rex_base_quality_check",
-                "prio": 8,
+                "prio": 9,
                 "type_id": "value",
                 "type_name": "prio",
                 "db_type": "int",
@@ -164,11 +180,11 @@
                 "default": "",
                 "attributes": "",
                 "notice": "",
-                "fields": ""
+                "fields": "title"
             },
             {
                 "table_name": "rex_base_quality_check",
-                "prio": 9,
+                "prio": 10,
                 "type_id": "value",
                 "type_name": "choice",
                 "db_type": "int",
@@ -193,7 +209,7 @@
             },
             {
                 "table_name": "rex_base_quality_check",
-                "prio": 10,
+                "prio": 11,
                 "type_id": "value",
                 "type_name": "checkbox",
                 "db_type": "tinyint(1)",
@@ -207,6 +223,54 @@
                 "attributes": "",
                 "notice": "",
                 "output_values": "open,closed"
+            },
+            {
+                "table_name": "rex_base_quality_check",
+                "prio": 12,
+                "type_id": "value",
+                "type_name": "textarea",
+                "db_type": "text",
+                "list_hidden": 1,
+                "search": 0,
+                "name": "comment",
+                "label": "Projektkommentar",
+                "not_required": "1",
+                "default": "",
+                "no_db": "0",
+                "attributes": "{\"class\":\"form-control\",\"rows\":\"4\"}",
+                "notice": ""
+            },
+            {
+                "table_name": "rex_base_quality_check",
+                "prio": 13,
+                "type_id": "value",
+                "type_name": "text",
+                "db_type": "varchar(191)",
+                "list_hidden": 1,
+                "search": 0,
+                "name": "checked_by",
+                "label": "Geprüft von",
+                "not_required": "1",
+                "default": "",
+                "no_db": "0",
+                "attributes": "",
+                "notice": ""
+            },
+            {
+                "table_name": "rex_base_quality_check",
+                "prio": 14,
+                "type_id": "value",
+                "type_name": "datetime",
+                "db_type": "datetime",
+                "list_hidden": 1,
+                "search": 0,
+                "name": "checked_at",
+                "label": "Geprüft am",
+                "not_required": "1",
+                "default": "",
+                "no_db": "0",
+                "attributes": "",
+                "notice": ""
             }
         ]
     },
@@ -247,7 +311,7 @@
                 "default": "",
                 "attributes": "",
                 "notice": "",
-                "fields": ""
+                "fields": "group"
             },
             {
                 "table_name": "rex_base_quality_check_group",

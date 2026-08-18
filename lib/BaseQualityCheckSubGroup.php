@@ -8,13 +8,13 @@ class BaseQualityCheckSubGroup extends rex_yform_manager_dataset
 {
     /* Untergruppe */
     /** @api */
-    public function getSubgroup(): ?string
+    public function getSubgroup(): string
     {
-        return $this->getValue('subgroup');
+        return (string) $this->getValue('subgroup');
     }
 
     /** @api */
-    public function setSubgroup(mixed $value): self
+    public function setSubgroup(?string $value): self
     {
         $this->setValue('subgroup', $value);
         return $this;
@@ -22,15 +22,15 @@ class BaseQualityCheckSubGroup extends rex_yform_manager_dataset
 
     /* Status */
     /** @api */
-    public function getStatus(): ?string
+    public function getStatus(): int
     {
-        return $this->getValue('status');
+        return (int) $this->getValue('status');
     }
 
     /** @api */
-    public function setStatus(mixed $value): self
+    public function setStatus(int|bool $value): self
     {
-        $this->setValue('status', $value);
+        $this->setValue('status', (int) $value);
         return $this;
     }
 }

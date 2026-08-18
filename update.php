@@ -9,6 +9,16 @@
  * @var \rex_addon $this
  */
 
+use FriendsOfRedaxo\BaseQualityCheck\ChecklistCatalog;
+use FriendsOfRedaxo\BaseQualityCheck\ChecklistStructure;
+use FriendsOfRedaxo\BaseQualityCheck\Schema;
+
+if (\rex_version::compare($this->getVersion(), '2.0.0', '<')) {
+    Schema::ensureVersion2();
+    ChecklistStructure::ensureCurrent();
+    ChecklistCatalog::sync();
+}
+
 
 /**
  * Update 1: Feldtypen optimiert

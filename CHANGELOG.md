@@ -1,92 +1,83 @@
 
-Base Quality Check - Changelog
-================================================================================
+<h1>Changelog</h1>
 
+Alle relevanten Änderungen an Base Quality Check werden in dieser Datei dokumentiert.
 
-## Version 1.8.2 23.09.2024
+<h2>2.0.0-beta1 – 2026-08-18</h2>
 
-- Reload der Seite per Javascript (siehe [#33 (https://github.com/FriendsOfREDAXO/base_quality_check/issues/33))
+<h3>Hinzugefügt</h3>
 
-## Version 1.8.1 xx.xx.2024 (WiP)
+- REDAXO-konforme Info-Navigation mit Hilfe, Changelog und Lizenz.
+- Versionsanzeige im Seitentitel.
+- Deutsche und englische Übersetzungen für die Oberfläche.
+- Prüfung einer veröffentlichten `security.txt` innerhalb des kompakten Sicherheitschecks ([#38](https://github.com/FriendsOfREDAXO/base_quality_check/issues/38)).
+- Projektkommentare zu einzelnen Prüfungen ([#40](https://github.com/FriendsOfREDAXO/base_quality_check/issues/40)).
+- Druckoptimierter Prüfbericht ([#41](https://github.com/FriendsOfREDAXO/base_quality_check/issues/41)).
+- Add-on-Abhängigkeiten mit Unterstützung für alternative oder kombinierte Voraussetzungen ([#13](https://github.com/FriendsOfREDAXO/base_quality_check/issues/13)).
+- Eigene Seite zum manuellen Anlegen und zum Import agentur- oder projektspezifischer Prüfungen aus JSON und CSV.
+- Beispieldateien für JSON sowie Excel-kompatibles CSV.
+- Änderungsprotokoll mit REDAXO-Benutzer und Zeitstempel.
+- Anzeige „Geprüft von“ in Checkliste und Prüfbericht sowie Kommentarindikator in der Übersicht.
+- Einklappbares Änderungsprotokoll außerhalb der Druckausgabe.
+- Dynamische Hauptbereiche mit automatischer Tab- und Berichtserzeugung eingeführt.
+- Standardstruktur auf Frontend & UX, Backend & REDAXO, Barrierefreiheit, SEO & Auffindbarkeit, Sicherheit & Datenschutz sowie Livegang & Betrieb erweitert.
+- Standardkatalog auf 30 klar prüfbare Punkte für eine solide Website und eine Prüfdauer von höchstens etwa zwei Stunden verdichtet.
+- Prüfinhalte in einer zentralen, versionierbaren JSON-Datei zusammengeführt.
+- Favicons und Social-Media-Vorschauen als gemeinsamen Prüfpunkt aufgenommen; für strukturierte Daten wird die Einrichtung des REDAXO JSON-LD Managers geprüft.
+- JSON- und CSV-Export der gepflegten Prüfinhalte als Grundlage für projektübergreifende Aktualisierungen und Pull Requests.
 
-- Optimiert die Darstellung der Füllstandsanzeige (siehe [#32](https://github.com/FriendsOfREDAXO/base_quality_check/issues/32))
-- LiveMode-Unterstützung (siehe [#31](https://github.com/FriendsOfREDAXO/base_quality_check/issues/31))
-...
+<h3>Geändert</h3>
 
-## Version 1.8.0 14.08.2024
+- Mindestanforderungen auf PHP 8.3, REDAXO 5.20 und YForm 5.0.1 angehoben.
+- Backend-Oberfläche vereinheitlicht, responsiv verbessert und tastaturbedienbar gemacht.
+- Gemeinsame Seitenlogik für Frontend-, Backend- und Live-Prüfungen eingeführt.
+- Model-Methoden typisiert und Namespace-Struktur konsolidiert.
+- Feste CKEditor-5-Bindung zugunsten normaler, flexibel konfigurierbarer Textfelder entfernt ([#18](https://github.com/FriendsOfREDAXO/base_quality_check/issues/18)).
+- Kompatibilität zu YForm 5 hergestellt ([#42](https://github.com/FriendsOfREDAXO/base_quality_check/issues/42)).
+- README und bestehende Prüfinhalte fachlich und sprachlich überarbeitet.
+- Veraltete und doppelte Standardprüfungen samt zugehöriger Protokolleinträge entfernt; Codebeispiele auf tatsächlich hilfreiche Fälle reduziert.
+- Hinweise zu `robots.txt`, Alternativtexten, Meta-Angaben, Cookies und Livebetrieb präzisiert.
+- „Prüfbericht“ direkt hinter den Checklisten und „Prüfungen verwalten“ rechts neben „Info“ angeordnet.
+- Verwaltungsseite passend zu ihrem erweiterten Funktionsumfang in „Prüfungen verwalten“ umbenannt.
+- Das Druckskript wird nur noch im Prüfbericht geladen; alte ungenutzte Assets wurden entfernt.
+- Vollständigen Reset über Deinstallation und Neuinstallation dokumentiert; eine eigene Einstellungsseite ist dafür nicht erforderlich.
+- Tabellenlayout der Checklisten stabilisiert, damit beim Öffnen von Detailbereichen weder Spalten noch der horizontale Seitenausschnitt springen.
+- Das Prioritätsfeld der Prüfungen zeigt im YForm-Auswahlfeld den jeweiligen Titel an.
+- Prism samt Theme entfernt; Codebeispiele nutzen schlanke native Codeblöcke ohne Textschatten.
+- Kompakte Tab-Bezeichnungen eingeführt, während Seitenüberschriften und Bericht die vollständigen Bereichsnamen beibehalten.
+- Prüfbericht mit Statusübersicht, Fortschrittskarten, klaren Bereichsblöcken und besser erkennbaren Prüfzuständen neu gestaltet.
+- Änderungsprotokoll im Bericht standardmäßig eingeklappt und vollständig vom Druck ausgeschlossen.
+- „Prüfungen verwalten“ als responsive Zweispalten-Ansicht für das Anlegen sowie den Import und Export von Prüfinhalten neu gegliedert.
 
-Datentypen in der Datenbank optimert (`int` statt `text`); Versionen vor 1.8.0 werden
-automatisch aktualisiert.
+<h3>Behoben</h3>
 
-Fehlende Klasse `form-control` im YForm-Formular ergänzt.
+- Statusänderungen sind nur noch per POST, mit CSRF-Schutz und ausschließlich für Administratoren möglich.
+- Division durch null bei leeren Prüfgruppen verhindert.
+- Dynamische Inhalte und Attribute der Oberfläche werden korrekt maskiert.
+- CKEditor-Fallback gegen fehlende oder anders aufgebaute Formelemente abgesichert.
+- Falsche bzw. unvollständige Rückgabetypen in den YForm-Modellen korrigiert.
+- Statusänderungen auf Administratoren beschränkt ([#39](https://github.com/FriendsOfREDAXO/base_quality_check/issues/39)).
+- Rückgabetypen und Fragment-Ausgaben für RexStan bereinigt ([#17](https://github.com/FriendsOfREDAXO/base_quality_check/issues/17)).
 
-Umstellung auf rex_loader-API und Redaxo-Mindestversion 5.17.0 (passend zu YForm)
+<h2>1.8.2 – 2024-09-23</h2>
 
-## Version 1.7.0 06.08.2024
+- Seite nach einer Statusänderung per JavaScript neu geladen ([#33](https://github.com/FriendsOfREDAXO/base_quality_check/issues/33)).
 
-Source-Code in der Detailbeschreibung einzelner Checks wird nun sprachspezifisch farbig
-dargestellt (Syntax-Hervorhebung). Dazu werden beim ersten Update auf eine Version 1.7+
-die jeweiligen Tests im Feld "source" aktualisiert (#26).
+<h2>1.8.1 – 2024</h2>
 
-Die Bindung der Textfelder im Formular zur Tabelle rex_base_quality_check an den
-CKE5-Editor wird automatisch aufgehoben, wenn das CKE5-Addon nicht verfügbar ist. (#21)
+- Darstellung der Fortschrittsanzeige verbessert ([#32](https://github.com/FriendsOfREDAXO/base_quality_check/issues/32)).
+- Live-Mode-Unterstützung ergänzt ([#31](https://github.com/FriendsOfREDAXO/base_quality_check/issues/31)).
 
-## Version 1.6.0. 22.07.2024
+<h2>1.8.0 – 2024-08-14</h2>
 
-add installer action, publish to redaxo.org. Danke an [skerbis](https://github.com/skerbis)
+- Datenbank- und YForm-Feldtypen optimiert.
+- Mindestversion auf REDAXO 5.17 angehoben.
 
+<h2>1.7.0 – 2024-08-06</h2>
 
-## Version 1.5.0  - 22.07.2024
+- Syntaxhervorhebung für Markdown-Codebeispiele ergänzt.
+- Fallback für Installationen ohne CKEditor 5 ergänzt.
 
-- Füllstandsanzeige nur mit PHP, kein JS. Danke an [christophboecker](https://github.com/christophboecker)
+<h2>1.0.0 – 2024-07-11</h2>
 
-## Version 1.4.0  - 21.07.2024
-
-- Namespace / PSR angleichen. Danke an [christophboecker](https://github.com/christophboecker)
-
-## Version 1.3.2 - 17.07.2024
-
-- Fehlerbehbung
-- LICENSE geändert 
-
-## Version 1.3.1 - 15.07.2024
-
-- Fehlerbehbung
-- Änderung der README
-
-## Version 1.3.0 - 15.07.2024
-
-- Nutzung von Namespaces. Danke an [skerbis](https://github.com/skerbis)
-- Anpassung Light Mode
-
-## Version 1.2.3 - 15.07.2024
-
-- weitere Checks
-- Vorbereitung für den Umzug zu FOR
-
-## Version 1.2.2 - 15.07.2024
-
-- weitere Checks
-
-## Version 1.2.1 - 13.07.2024
-
-- kleinere Änderungen
-- neue Status Icons
-
-## Version 1.2.0 - 12.07.2024
-
-- Hover und Title Text bei den Status Icons angepasst. Danke an [Norbert](https://github.com/tyrant88)
-- Readme angepasst
-
-## Version 1.1.0 - 12.07.2024
-
-- weitere Test hinzugefügt
-- Nutzung eines Fragments bei den Seite 
-- Codeoptimierungen
-- live_mode: false hinzugefügt. Danke an [skerbis](https://github.com/skerbis)
-- Readme umgeschrieben
-- Changelog via Tab anzeigbar
-
-## Version 1.0.0 - 11.07.2024
-
-- erste Version
+- Erste Veröffentlichung.

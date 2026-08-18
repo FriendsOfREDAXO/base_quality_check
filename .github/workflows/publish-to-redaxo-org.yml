@@ -1,4 +1,5 @@
 # Instructions: https://github.com/FriendsOfREDAXO/installer-action/
+# Recommended workflow template (up-to-date)
 
 name: Publish to REDAXO.org
 on:
@@ -10,7 +11,7 @@ jobs:
   redaxo_publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - if: hashFiles('composer.json') != ''
         uses: shivammathur/setup-php@v2
         with:
@@ -25,3 +26,4 @@ jobs:
           myredaxo-api-key: ${{ secrets.MYREDAXO_API_KEY }}
           description: ${{ github.event.release.body }}
           version: ${{ github.event.release.tag_name }}
+          enforce-redaxo-addon-validation: true

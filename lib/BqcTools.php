@@ -5,7 +5,7 @@ namespace FriendsOfRedaxo\BaseQualityCheck;
 /**
  * Service-Klasse mit Tools.
  */
-class BqcTools
+final class BqcTools
 {
     /**
      * Übersetzt einen %-Satz (Erreichnungsgrad, Füllgrad) in CSS-Klassen
